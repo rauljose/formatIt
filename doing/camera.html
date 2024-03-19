@@ -1,0 +1,225 @@
+<ul>
+    <li> github.com/dmile/demo
+    <li>github.com/rzadp/badminton-monorepo </li>
+    <li>github.com/InoveAlumnos/camera_iot async
+
+
+    </li>
+</ul>
+<div id="camera-container">
+    <select id="camera-selector">
+        <option value="environment">Back Camera</option>
+        <option value="user">Front Camera</option>
+    </select>
+
+    <button id="capture-button">Capture Image</button>
+    <video id="camera-preview" width="640" height="480"></video>
+    <canvas id="image-canvas" width="640" height="480"></canvas>
+</div>
+<button id="upload-button" disabled>Upload Image</button>
+<img id="captured-image-preview" alt="Captured Image Preview" />
+
+<script>
+    const cameraSelector = document.getElementById('camera-selector');
+    const captureButton = document.getElementById('capture-button');
+    const cameraPreview = document.getElementById('camera-preview');
+    const imageCanvas = document.getElementById('image-canvas');
+    const uploadButton = document.getElementById('upload-button');
+    const capturedImagePreview = document.getElementById('captured-image-preview');
+
+    let navigator = window.navigator;
+    let mediaStream;
+    let facingMode = "environment"; // Default to back camera
+
+    // Function to handle camera access permission
+    async function handleCameraAccess() {
+        try {
+        const mediaDevices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = mediaDevices.filter(device => device.kind === 'videoinput');
+
+        if (videoDevices.length > 1) {
+        // User has multiple cameras, allow selection (optional)
+        // ... (code to display camera selection options)
+        }
+
+        mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+        cameraPreview.srcObject = mediaStream;
+        } catch (error) {
+            console.error("Error accessing camera:", error);
+        }
+    }
+
+    // Function to handle camera access permission based on selected facingMode
+    async function handleCameraAccessRar() {
+        const facingMode = cameraSelector.value;
+        try {
+            mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode } });
+            cameraPreview.srcObject = mediaStream;
+        } catch (error) {
+            console.error("Error accessing camera:", error);
+        }
+    }
+
+
+    // Function to capture image from preview
+    function captureImage() {
+    const context = imageCanvas.getContext('2d');
+    imageCanvas.width = cameraPreview.videoWidth;
+    imageCanvas.height = cameraPreview.videoHeight;
+    context.drawImage(cameraPreview, 0, 0);
+    capturedImagePreview.src = imageCanvas.toDataURL('image/jpeg', 0.8); // Set image quality (0-1)
+    uploadButton.disabled = false; // Enable upload after capture
+}
+
+    // Function to resize captured image (optional, server-side resizing can be used)
+    function resizeImage(dataURL) {
+    const MAX_WIDTH = 640; // Adjust maximum width for resizing
+    const MAX_HEIGHT = 480; // Adjust maximum height for resizing
+
+    const image = new Image();
+    image.onload = () => {
+    const width = image.width;
+    const height = image.height;
+    let newWidth, newHeight;
+
+    if (width > height) {
+    newWidth = Math.min(width, MAX_WIDTH);
+    newHeight = Math.floor(height * (newWidth / width));
+} else {
+    newHeight = Math.min(height, MAX_HEIGHT);
+    newWidth = Math.floor(width * (newHeight / height));
+}
+
+    const resizedCanvas = document.createElement('canvas');
+    const resizedContext = resizedCanvas.getContext('2d');
+    resizedCanvas.width = newWidth;
+    resizedCanvas.height = newHeight;
+    resizedContext.drawImage(image, 0, 0, newWidth, newHeight);
+
+    return resizedCanvas.toDataURL('image/jpeg', 0.8); // Return resized dataURL
+};
+    image.src = dataURL;
+}
+
+    // Function to upload image to Firebase Storage
+    async function uploadImage(dataURL) {
+    // Replace with your Firebase Storage reference
+    const storageRef = firebase.storage().ref('images/');
+    const filename = `${Date.now()}.jpg`;
+    const imageBlob = await fetch(dataURL).then(response => response.blob());
+    const uploadTask = storageRef.child(filename).put(imageBlob);
+
+    uploadTask.on('state_changed',
+    (snapshot) => {
+    // Track upload progress
+},
+    (error) => {
+    console.error("Error uploading image:", error);
+},
+    () => {
+    console.log("Image uploaded successfully!");
+    // Store image metadata or reference in your database
+}
+    );
+}
+
+    captureButton.addEventListener('click', () => {
+    captureImage();
+});
+
+    async function requestCameraAccess() {
+        try {
+            const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            // Use the mediaStream for camera access (preview, capture, etc.)
+        } catch (error) {
+            if (error.name === 'PermissionDeniedError') {
+                console.error("User denied camera access");
+            } else {
+                console.error("Error accessing camera:", error);
+            }
+        }
+    }
+
+    async function requestCameraAccess2() {
+        try {
+            const mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: 640, // Adjust width as needed
+                    height: 480, // Adjust height as needed
+                    frameRate: 1 // Set low frame rate for still capture
+                }
+            });
+            // Use the mediaStream to capture a still frame (explained later)
+        } catch (error) {
+            // Handle permission errors
+        }
+    }
+
+    async function requestGeolocation() {
+        try {
+            const position = await navigator.geolocation.getCurrentPosition();
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            // Use the latitude and longitude for your application logic (e.g., display on a map)
+            console.log(`User location: ${latitude}, ${longitude}`);
+        } catch (error) {
+            if (error.code === 1) {
+                console.error("User denied geolocation permission");
+            } else if (error.code === 2) {
+                console.error("Geolocation unavailable");
+            } else {
+                console.error("Geolocation error:", error);
+            }
+        }
+    }
+
+    // Call the function to request permission and access location
+    requestGeolocation();
+    async function requestGeolocation() {
+        try {
+            const permission = await navigator.geolocation.checkPermission();
+
+            if (permission === 'granted') {
+                // Geolocation already allowed, proceed
+                const position = await navigator.geolocation.getCurrentPosition();
+                // Use the position data here
+            } else if (permission === 'denied') {
+                console.error("User denied geolocation permission");
+                // Inform user and offer options (explained later)
+            } else { // permission === 'prompt'
+                const position = await navigator.geolocation.getCurrentPosition();
+                // Use the position data here
+            }
+        } catch (error) {
+            // Handle other geolocation errors
+        }
+    }
+
+    // Function to inform user and offer options (optional)
+    function informGeolocationPermission() {
+        const message = "Geolocation access is required. You can grant permission for this session or always allow access in your browser settings.";
+        const learnMoreButton = document.createElement('button');
+        learnMoreButton.textContent = "Learn More";
+        learnMoreButton.addEventListener('click', () => {
+            // Open browser settings or documentation on geolocation permissions
+        });
+
+        // Display message and button (your UI implementation)
+        console.log(message); // Replace with your UI implementation
+    }
+
+    // Call requestGeolocation
+    requestGeolocation();
+
+    // Conditionally display permission information based on checkPermission result
+    if (navigator.geolocation && navigator.permissions) {
+        navigator.geolocation.checkPermission()
+            .then(permission => {
+                if (permission === 'denied') {
+                    informGeolocationPermission();
+                }
+            });
+    } else {
+        console.error("Geolocation API not supported");
+    }
