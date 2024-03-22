@@ -77,6 +77,11 @@ class FormatItFormats {
         ultimo_cambio_el: this.DATETIME,
         titulo: this.TITLE,
         encabezado: this.TITLE,
+        unidad:{attributes:{class:"cen"}},
+        unidades:{attributes:{class:"cen"}},
+        units:{attributes:{class:"cen"}},
+        unidades_id:{attributes:{class:"cen"}},
+        
     }
 
     /**
