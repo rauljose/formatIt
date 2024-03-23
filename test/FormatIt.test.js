@@ -34,6 +34,15 @@ describe('FormatIt format values as requested considering the record. or deduce 
         it('FormatIt.date Format an early Date()', () => {
             assert.equal(formatItDefault.date(new Date(ymd2), format), "d=08, j=8, D=Su, l=Sunday, w=0, m=11, n=11, M=Nov, F=November, Y=2026, y=26, H=09, G=9, h=09, g=9, i=04, s=06, a=am, A=AM")
         });
+        it('FormatIt.date Default format', () => {
+            assert.equal(formatItDefault.date("1987-01-02"), "02/Jan/87")
+        });
+        it('FormatIt.date Spanish', () => {
+            formatItDefault.language = "es";
+            assert.equal(formatItDefault.date("1987-01-02"), "02/Ene/87");
+            formatItDefault.language = "en";
+            assert.equal(formatItDefault.date("1987-04-02"), "02/Apr/87")
+        });
     });
 
     describe('FormatIt.deduceFormat(fieldName, value, row) fieldName not in fieldNameFormat', () => {
@@ -91,7 +100,7 @@ describe('FormatIt format values as requested considering the record. or deduce 
         });
     });
 
-    describe('FormatIt.mergeFormats(a, b)', () => {
+    describe('FormatIt.mergeFormats(a, b) join 2 objects', () => {
 
         it("mergeFormats(a, b) should extend object a with object b. b's keys override a's keys, except in attributes' class & style they are concatenated. input formats are not modified", () => {
             const formatA = {
@@ -315,4 +324,71 @@ describe('FormatIt format values as requested considering the record. or deduce 
 
     });
 
+    describe("FormatIt.num(n) format a number", () => {
+        it("Numbers", () => {
+            assert.deepStrictEqual(
+                formatItDefault.num(1234.567, 2), "1,234.57", "thosands & round");
+            assert.deepStrictEqual(
+                formatItDefault.num(1234567.89, 1), "1,234,567.9", "millons & round");
+            assert.deepStrictEqual(
+                formatItDefault.num(-1234567.89, 1), "-1,234,567.9", "negative millons & round");
+            assert.deepStrictEqual(
+                formatItDefault.num(0, 4), "0.0000", "zero");
+            assert.deepStrictEqual(
+                formatItDefault.num(3.145, 4), "3.1450", "no comas");
+            assert.deepStrictEqual(
+                formatItDefault.num(-3.145, 4), "-3.1450", "no comas negative");
+            assert.deepStrictEqual(
+                formatItDefault.num(-3.145, 0), "-3", "integer no decimals no decimal point");
+            assert.deepStrictEqual(
+                formatItDefault.num(-2.7172, 0), "-3", "integer no decimals no decimal point");
+            assert.deepStrictEqual(
+                formatItDefault.num("-1234567.89", 1), "-1,234,567.9", "number as string");
+            assert.deepStrictEqual(
+                formatItDefault.num(1234.56781, 4), "1,234.5678", "No rounding");
+        });
+        it("Decimal parameter", () => {
+            assert.deepStrictEqual(
+                formatItDefault.num(1234.56781), "1,234.57", "Defaults to 2");
+            assert.deepStrictEqual(
+                formatItDefault.num(2234.56781, -1), "2,234.57", "Invalid, Negative");
+            assert.deepStrictEqual(
+                formatItDefault.num(3234.56781, null), "3,234.57", "Invalid, null");
+            assert.deepStrictEqual(
+                formatItDefault.num(4234.56781, ''), "4,234.57", "'' defaults to 2");
+            assert.deepStrictEqual(
+                formatItDefault.num(5234.56781, [3,4,5]), "5,234.57", "invalid defaults to 2");
+            assert.deepStrictEqual(
+                formatItDefault.num(6234.56781, "a string"), "6,234.57", "a string defaults to 2");
+            assert.deepStrictEqual(
+                formatItDefault.num(7234.56781, "4"), "7,234.5678", "a string number");
+        });
+        it("Infinity values", () => {
+            assert.deepStrictEqual(
+                formatItDefault.num(4/0, 1), "∞", "Infinty ∞");
+            assert.deepStrictEqual(
+                formatItDefault.num(-1202/0, 1), "-∞", "-Infinty -∞");
+        });
+       it("Null value", () => {
+          assert.deepStrictEqual(formatItDefault.num(null, 2), "");
+       });
+        it("Empty string", () => {
+            assert.deepStrictEqual(formatItDefault.num("", 2), "");
+        });
+        it("A string", () => {
+            assert.deepStrictEqual(formatItDefault.num("A string", 2), "A string");
+        });
+
+
+        it("An Object", () => {
+            assert.deepStrictEqual(
+                formatItDefault.num({"a":"baba", "pi": 1003.141592, "e":"-2002.7172"}, 2),
+                {"a":"baba", "pi": "1,003.14", "e":"-2,002.72"});
+        });
+        it("An Array", () => {
+            assert.deepStrictEqual(
+                formatItDefault.num([1, "1", "one", 3.141592, "2.7174", "1234.567"], 2),
+                ["1.00", "1.00", "one", "3.14", "2.72", "1,234.57"]);
+        });
+    });
 });

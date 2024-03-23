@@ -1,41 +1,19 @@
 // noinspection JSUnusedLocalSymbols,JSUnusedGlobalSymbols
 
-const FormatItFormats = require('../src/FormatItFormats');
+const FormatItFormats = require('./FormatItFormats');
 var formatItLocale = formatItLocale || {};
-formatItLocale['en'] = {
-    true: 'Yes',
-    false: 'No',
-    'and': 'and',
-    'or': 'or',
-    longMonth: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September',
-        'October', 'November', 'December'],
-    shortMonth: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    longDay: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    shortDay: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
 
-    titleCaseNonCapitalizedWords: {
-        "a": true,
-        "an": true,
-        "the": true,
-        "and": true,
-        "but": true,
-        "for": true,
-        "or": true,
-        "so": true,
-        "yet": true,
-        "of": true,
-        "at": true,
-        "by": true,
-        "in": true,
-        "out": true,
-        "on": true,
-        "to": true,
-        "up": true,
-        "down": true,
-        "with": true,
-    },
-};
-// import * as formatIt_en from "./i18n/formatItLocale_en.js";
+{
+    const importIfNotPresent = (currentObj, modulePath) => {
+        const moduleObj = require(modulePath);
+        for(const key in moduleObj)
+            if(!(key in currentObj))
+                currentObj[key] = moduleObj[key];
+    }
+    importIfNotPresent(formatItLocale, './i18n/formatItLocale_en.js');
+    importIfNotPresent(formatItLocale, './i18n/formatItLocale_es.js');
+}
+
 
 /*
 
@@ -142,19 +120,20 @@ class FormatIt {
      * @returns {string}
      */
     bool(value, trueString = null, falseString = null) {
+        if(Array.isArray(value)) {
+            for(let i = 0, len = value.length; i < len; ++i)
+                value[i] = this.bool(value[i]);
+            return value;
+        }
+        if(null !== value && typeof value === 'object') {
+            for(let i in value)
+                if(value.hasOwnProperty(i))
+                    value[i] = this.bool(value[i]);
+            return value;
+        }
         if(value)
             return null === trueString ? this.#language[true] || this.#language.true : trueString;
         return null === falseString ? this.#language[false] || this.#language.false : falseString;
-    }
-
-    fieldNameToLabel(fieldName) {
-        return this.titleCase(
-            fieldName
-                .replaceAll(/([_.])/g , " ")
-                .replaceAll(/([A-Z])/g, " $1")
-                .replaceAll(/(\d+)/g, " $1 ")
-                .replaceAll(/\s{2,}/, " ").trim()
-        );
     }
 
     /**
@@ -178,38 +157,54 @@ class FormatIt {
         let last = arr.pop();
         return `${arr.join(", ")} ${this.#language[lastAndOr] || lastAndOr} ${last}`;
     }
+    
+    fieldNameToLabel(fieldName) {
+        return this.#recurseMe(fieldName,  (fieldName) => {
+            return this.titleCase(
+                fieldName
+                    .replaceAll(/([_.])/g , " ")
+                    .replaceAll(/([A-Z])/g, " $1")
+                    .replaceAll(/(\d+)/g, " $1 ")
+                    .replaceAll(/\s{2,}/, " ").trim()
+            );
+        });
+    }
 
+    lowerCase(str) {
+        return this.#recurseMe(str,  (str) => {return String(str).toLocaleLowerCase();});
+    }
+
+    upperCase(str) {
+        return this.#recurseMe(str,  (str) => {return String(str).toLocaleUpperCase();});
+    }
+    
     /**
      *
      * @param str
      * @returns {string}
      */
     ucWords(str) {
-        if(null === str)
-            return this.#null2String;
-        if("" === str)
-            return "";
-        return String(str).toLowerCase()
-            .replace(/\b[a-z]/g, (l) => l.toUpperCase());
+        return this.#recurseMe(str,  (str) => {
+            return String(str).toLocaleLowerCase()
+                .replace(/\b[a-z]/g, (l) => l.toLocaleUpperCase());
+        });
     }
-
+    
     /**
      *
      * @param str
      * @returns {string}
      */
     titleCase(str) {
-        if(null === str)
-            return this.#null2String;
-        if("" === str)
-            return "";
-        let nonCapitalizedWords = this.#language.titleCaseNonCapitalizedWords || {};
-        return String(str).toLowerCase().replace(
-            /\b([a-z\p{L}])+\b/gu,
-            function(match, any, pos) {
-                if(pos && nonCapitalizedWords.hasOwnProperty(match))
-                    return match;
-                return match.charAt(0).toUpperCase() + match.slice(1);
+        return this.#recurseMe(str,  (str) => {
+            let nonCapitalizedWords = this.#language.titleCaseNonCapitalizedWords || {};
+            return String(str).toLocaleLowerCase().replace(
+                /\b([a-z\p{L}])+\b/gu,
+                function(match, any, pos) {
+                    if(pos && nonCapitalizedWords.hasOwnProperty(match))
+                        return match;
+                    return match.charAt(0).toLocaleUpperCase() + match.slice(1);
+                });
         });
     }
 
@@ -219,17 +214,17 @@ class FormatIt {
      * @returns {string}
      */
     htmlentities(str) {
-        if(null === str)
-            str = this.#null2String;
-        const charMap = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&apos;"
-        };
-        const pattern = /[&<>'"]/g;
-        return String(str).replace(pattern, match => charMap[match]);
+        return this.#recurseMe(str,  (str) => {
+            const charMap = {
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&apos;"
+            };
+            const pattern = /[&<>'"]/g;
+            return String(str).replace(pattern, match => charMap[match]);
+        });
     }
 
     /**
@@ -239,13 +234,24 @@ class FormatIt {
      * @returns {string}
      */
     num(n, dec = 2){
-        if(null === n)
-            return this.#null2String;
         if("" === n)
             return "";
+        if(Array.isArray(n)) {
+            for(let i = 0, len = n.length; i < len; ++i)
+                n[i] = this.num(n[i], dec);
+            return n;
+        }
+        if(null === n)
+            return this.#null2String;
+        if(typeof n === 'object') {
+            for(let i in n)
+                if(n.hasOwnProperty(i))
+                    n[i] = this.num(n[i], dec);
+            return n;
+        }
         if(isNaN(n))
             return n;
-        if(isNaN(dec))
+        if(isNaN(dec) || dec < 0 || null === dec || "" === dec)
             dec = 2;
         if(!this.#intlNumFmt.hasOwnProperty(dec))
             this.#intlNumFmt[dec] = new Intl.NumberFormat("en-US", {
@@ -265,10 +271,21 @@ class FormatIt {
      * @throws {Error} - If an error occurs during the formatting process.
      */
     date(inputDate, dateFormat = "d/M/y")  {
-        if(null === inputDate)
-            return this.#null2String;
         if("" === inputDate)
             return "";
+        if(Array.isArray(inputDate)) {
+            for(let i = 0, len = inputDate.length; i < len; ++i)
+                inputDate[i] = this.date(inputDate[i], dateFormat);
+            return inputDate;
+        }
+        if(null === inputDate)
+            return this.#null2String;
+        if(typeof inputDate === 'object' && !(inputDate instanceof Date)) {
+            for(let i in inputDate)
+                if(inputDate.hasOwnProperty(i))
+                    inputDate[i] =this.date(inputDate[i], dateFormat);
+            return inputDate;
+        }
         try {
             function padZero(value) {return value < 10  ? `0${value}` : `${value}`;}
 
@@ -282,7 +299,7 @@ class FormatIt {
                     new Date(`${inputDate}T00:00:00`) : new Date(inputDate);
             else
                 date = new Date(inputDate);
-//\\d=d,\\j=j,\\D=D
+
             const parts = {
                 d: padZero(date.getDate()),
                 j: date.getDate(),
@@ -325,11 +342,13 @@ class FormatIt {
                 ret.push(parts.hasOwnProperty(c) ? parts[c] : c);
             }
             return ret.join("");
-        } catch(error) {
+        }
+        catch(error) {
             console.log("ERROR: formatIt.date:", error);
             console.log("       arguments", arguments);
             return inputDate;
         }
+
     }
 
     is_ymd(value) {
@@ -352,7 +371,7 @@ class FormatIt {
 
     getFormatForFieldName(fieldName, value, row) {
         let fieldNameFormat = this.#formats.fieldNameFormat;
-        let f = fieldNameFormat[fieldName] || fieldNameFormat[fieldName.toLowerCase()]
+        let f = fieldNameFormat[fieldName] || fieldNameFormat[fieldName.toLocaleLowerCase()]
             || this.#deduceFormat(fieldName, value, row);
         if(this.#addFieldName2class && typeof fieldName === 'string' && fieldName.length > 0)
             f = this.mergeFormats(f, {attributes:{class:fieldName}});
@@ -368,7 +387,7 @@ class FormatIt {
             if(rowFormats.hasOwnProperty(f) && row.hasOwnProperty(f) && rowFormats[f].hasOwnProperty(row[f]))
                 format = this.mergeFormats(format, rowFormats[f][row[f]]);
             else {
-                f = f.toLowerCase();
+                f = f.toLocaleLowerCase();
                 if(rowFormats.hasOwnProperty(f) && row.hasOwnProperty(f) && rowFormats[f].hasOwnProperty(row[f]))
                     format = this.mergeFormats(format, rowFormats[f][row[f]]);
             }
@@ -446,6 +465,25 @@ class FormatIt {
         }
 
         return extended;
+    }
+
+    #recurseMe(parameter, callback) {
+        if(Array.isArray(parameter)) {
+            for(let i = 0, len = parameter.length; i < len; ++i)
+                parameter[i] = this.#recurseMe(parameter[i], callback);
+            return parameter;
+        }
+        if(null === parameter)
+            return this.#null2String;
+        if(typeof parameter === 'object') {
+            for(let i in parameter)
+                if(parameter.hasOwnProperty(i))
+                    parameter[i] =this.#recurseMe(parameter[i], callback);
+            return parameter;
+        }
+        if("" === parameter)
+            return "";
+        return callback[parameter];
     }
 
 }
