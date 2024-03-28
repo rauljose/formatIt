@@ -1,0 +1,110 @@
+/* Normalize with motto: don't disturb others, as much as possible! */
+BUTTON {cursor:pointer}
+LABEL {cursor:pointer}
+IMG {border:none}
+
+/* falta prefijar con it_ */
+.izq, .lft, .left {text-align: left}
+.der, .rgt, .right {text-align: right}
+.cen, .center {text-align: center}
+
+/* Generales */
+.it_izq, .it_lft, .it_left {text-align: left}
+.it_der, .it_rgt, .it_right {text-align: right}
+.it_cen, .it_center {text-align: center}
+/* falta alinear texto-imagen */
+
+/* A */
+A.it_inherit {color:inherit}
+A.it_inherit:hover {color:inherit}
+A.it_inherit:visited {color:inherit}
+A.it_inherit:active {color:inherit}
+
+A.it_menu {color:inherit;text-decoration:none;}
+A.it_menu:visited {color:inherit;text-decoration:none;}
+A.it_menu:hover {color:inherit;text-decoration:none;}
+A.it_menu:active {color:inherit;text-decoration:none;}
+
+/* Content editable */
+/* background pencil in right-top corner for contentEditable element */
+.it_content_editable {
+    background-image:  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABmUExURf////X19fz8/PDw8HR0dKSkpH9/f9vb26enp5mZmX19fd3d3fHx8aCgoKioqJOTk35+fu/v75SUlIaGht7e3nt7e+jo6JeXl5qamsLCwmVlZenp6fn5+XZ2duvr6+3t7UNDQ/j4+G85YEwAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABuSURBVChTTcxXEoAgDATQaKyAKPZe7n9JzRA1+7Vv2AAiQciFg1HMzQeTNMu5U1BpU9j4uyKXJo2C31gaXSHbeSvhZ6+VY9N9Lfbs/71paV+9Btv1gzSM07y0wuu2T13z/vfkOLfRCsN6XNwoADdhOQXJvHUanwAAAABJRU5ErkJggg==');
+    background-repeat: no-repeat;
+    background-position: top right;
+    cursor:text;
+}
+.it_content_editable:hover, .editable:focus {
+    background: #f3f3f3;
+    border: 1px solid #ddd;
+}
+
+/* DETAILS */
+DETAILS.it_details {}
+DETAILS.it_details > SUMMARY {color:darkgreen}
+DETAILS.it_details > summary + div:first-of-type {
+    border:1px darkgreen solid;
+    margin:1em; padding:0.3em;
+}
+
+/* Fieldset */
+FIELDSET.it_fieldset {width:fit-content;}
+
+/* Helpers */
+.it_separator {padding-left:1em;}
+
+/* Highlight selected checkbox's label
+ <input class="it_checkbox" id="theId" name="name" value="1" type="checkbox"><label for="theId"> The cat is here</label>
+*/
+INPUT.it_checkbox:checked + label {color:#00F;}
+
+/* Highlight selected radio's label
+ <input class="it_checkbox" id="theId" name="name" value="1" type="radio"><label for="theId"> The cat is here</label>
+*/
+INPUT.it_radio:checked + label {color:#00F;}
+
+/* A checkbox that show checkmark on selected & cross on unselected chainging the label's color.
+ <input class="it_checkCross" id="id" name="name" value="1" type="checkbox"><label for="anyId"> It is Cat!</label>
+*/
+INPUT.it_checkCross {display:none;}
+INPUT.it_checkCross + LABEL {box-shadow:2px 2px 0 rgba(0, 0, 0, 0.1);padding-right:0.2em;cursor:pointer;}
+INPUT.it_checkCross:checked + LABEL:before {content:"";}
+INPUT.it_checkCross:checked + LABEL {color:darkgreen}
+INPUT.it_checkCross:checked + LABEL:before {color:darkgreen; content:"\2713"; /* &Check; unicode character */ text-align:center;line-height:20px;}
+INPUT.it_checkCross:not(:checked) + LABEL {color:red}
+INPUT.it_checkCross:not(:checked) + LABEL:before {color:red;content:"\2717"; /* &Cross; unicode character */ text-align:center;line-height:20px;}
+
+/* A checkbox that show checkmark on selected & cross on unselected chainging the label's color for Active/Inactive, use ctivo en español.
+ <input class="it_checkCross" id="id" name="name" value="1" type="checkbox"><label for="anyId">ctive</label>
+*/
+INPUT.it_activeInactive {display:none;}
+INPUT.it_activeInactive + LABEL {box-shadow:2px 2px 0 rgba(0, 0, 0, 0.1);padding-right:0.2em;cursor:pointer;}
+INPUT.it_activeInactive:checked + LABEL:before {content:"";}
+INPUT.it_activeInactive:checked + LABEL {color:darkgreen}
+INPUT.it_activeInactive:checked + LABEL:before {color:darkgreen; content:"\2713 A"; /* &Check; unicode character */ text-align:center;line-height:20px;}
+INPUT.it_activeInactive:not(:checked) + LABEL {color:red}
+INPUT.it_activeInactive:not(:checked) + LABEL:before {color:red;content:"\2717 Ina"; /* &Cross; unicode character */ text-align:center;line-height:20px;}
+
+INPUT.it_input {}
+INPUT.it_input[readonly] {border:none}
+INPUT.it_input[disabled] {border:none}
+
+
+/* Table */
+.it_table {border-collapse: collapse;
+    border:1px silver solid;
+    border-right:4px outset #0b3e6f;
+    border-bottom:4px outset #0b3e6f;
+    font-weight: normal}
+.it_table CAPTION {
+    border:1px #0b3e6f solid;
+    border-right:4px outset #0b3e6f;
+    border-bottom: none;
+    font-weight: bold; padding:0.2em; font-size:0.8em;
+    vertical-align: middle;text-align:center;}
+.it_table TH {border:1px #0b3e6f solid;font-weight: bold; padding:0.1em 0.4em;vertical-align: top;text-align:center;}
+.it_table TH.row {border-left:none;border-right:none;}
+.it_table TD {border:1px #0b3e6f solid;font-weight: normal; padding:0.1em 0.4em;vertical-align:top;text-align:left;}
+.it_table TD.row {border-left:none;border-right:none;}
+.it_table TD.der {text-align: right}
+.it_table TD.right {text-align: right}
+.it_table TD.cen {text-align: center}
