@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>itHtml Example</title>
+    <script src="itHtml.js"></script>
+    <style>
+        .exampleSection {display:flex;flex-wrap: wrap;flex-direction: row;gap:1em;justify-content: start;align-items: start;margin:1em}
+
+    </style>
+    <script>
+        function ponCode(fieldset, codeList) {
+            let ponOn = document.getElementById(fieldset);
+            for(let pon of codeList)
+                ponOn.insertAdjacentHTML('beforeend',`<h3>${pon}</h3>
+                <pre>${document.getElementById(pon).innerHTML.replaceAll("<", "&lt;")}</pre>`
+                );
+        }
+    </script>
+</head>
+<body style="margin:1em">
+<h1>itHtml examples</h1>
+    <h2>selectColorea</h2>
+    <i>A select that uses its selected option's css class</i>
+    <div class="exampleSection">
+        <div>
+            <style id="selectColoreaCSS">
+                /* nice class, normalize browsers!, use themed var */
+                SELECT {background-color: white}
+                /* needed class */
+                OPTION:NOT(:checked) {color:initial;background-color:initial;font-weight:initial;}
+                /* each class with OPTION for the OPTION and without for the select */
+                OPTION.classToSelect {color:red}
+                .classToSelect {color:red}
+                /* each class with OPTION for the OPTION and without for the select */
+                OPTION.otra {color:blue}
+                .otra {color:blue}
+            </style>
+            <div id="selectColoreaHTML">
+                <select id="id">
+                    <option class="classToSelect">classToSelect</option>
+                    <option selected="selected">No Class defined</option>
+                    <option class="otra">Otra class</option>
+                </select>
+            </div>
+            <script id="selectColoreaJS">
+                window.onload = function() {
+                    itHtml.selectColorea("id");
+                    document.getElementById("id").addEventListener('change', itHtml.selectColorea);
+                };
+            </script>
+        </div>
+        <div>
+            <fieldset id="selectColoreaFieldset"><legend>Code</legend>
+                <script>
+                    ponCode("selectColoreaFieldset", ["selectColoreaCSS", "selectColoreaHTML", "selectColoreaJS"]);
+                </script>
+            </fieldset>
+        </div>
+    </div>
+
+    <h2>radioButtonValue</h2>
+    <i>Get or Set a radio buttons value</i>
+    <div class="exampleSection">
+        <div>
+            <style id="radioButtonValueCSS">
+                LABEL {cursor:pointer}
+                INPUT:checked + label {color: blue;}
+            </style>
+            <div id="radioButtonValueHTML">
+                <fieldset><legend>Radio Buttons</legend>
+                    <input name="radioName" id="radioName1" value="1" type="radio"><label for="radioName1"> radioName value=1</label>
+                    <input name="radioName" id="radioName2" value="2" type="radio"><label for="radioName2"> radioName value=2</label>
+                    <input name="radioName" id="radioName3" value="3" type="radio"><label for="radioName3"> radioName value=3</label>
+                    <button type="button" onclick="this.innerHTML='Click for value: '+itHtml.radioButtonValue('radioName');">Click to read Value</button>
+                    <button type="button" onclick="itHtml.radioButtonValue('radioName', 3);">Set value to 3</button>
+                </fieldset>
+            </div>
+        </div>
+        <fieldset id="radioButtonValueFieldset"><legend>Code</legend>
+            <script>
+                ponCode("radioButtonValueFieldset", ["radioButtonValueCSS", "radioButtonValueHTML"]);
+            </script>
+        </fieldset>
+    </div>
+</body>
+</html>
