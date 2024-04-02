@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!--suppress HtmlUnknownTag -->
 <html lang="es-MX">
 <head>
     <meta charset="UTF-8">
@@ -8,7 +9,6 @@
     <script src="itHtml.js"></script>
     <style>
         .exampleSection {display:flex;flex-wrap: wrap;flex-direction: row;gap:1em;justify-content: start;align-items: start;margin:1em}
-
     </style>
     <script>
         function ponCode(fieldset, codeList) {
@@ -22,6 +22,7 @@
 </head>
 <body style="margin:1em">
 <h1>itHtml examples</h1>
+<i>javascript utilities for html</i>
     <h2>selectColorea</h2>
     <i>A select that uses its selected option's css class</i>
     <div class="exampleSection">
@@ -39,6 +40,7 @@
                 .otra {color:blue}
             </style>
             <div id="selectColoreaHTML">
+                <label for="id">Select to change color</label>
                 <select id="id">
                     <option class="classToSelect">classToSelect</option>
                     <option selected="selected">No Class defined</option>
@@ -75,7 +77,7 @@
                     <input name="radioName" id="radioName2" value="2" type="radio"><label for="radioName2"> radioName value=2</label>
                     <input name="radioName" id="radioName3" value="3" type="radio"><label for="radioName3"> radioName value=3</label>
                     <button type="button" onclick="this.innerHTML='Click for value: '+itHtml.radioButtonValue('radioName');">Click to read Value</button>
-                    <button type="button" onclick="itHtml.radioButtonValue('radioName', 3);">Set value to 3</button>
+                    <button type="button" onclick="itHtml.radioButtonValue('radioName', '3');">Set value to 3</button>
                 </fieldset>
             </div>
         </div>
@@ -85,5 +87,71 @@
             </script>
         </fieldset>
     </div>
+
+    <h2>blockUi, unBlockUi</h2>
+    <i>A select that uses its selected option's css class</i>
+    <div class="exampleSection">
+        <div>
+
+        </div>
+        <fieldset id="blockUnblockUIFieldset"><legend>Code</legend>
+            <script>
+                ponCode("blockUnblockUIFieldset", []);
+            </script>
+        </fieldset>
+    </div>
+
+    <h2>preventDoubleSubmit</h2>
+    <i>Force a form to be submitted once</i>
+    <div class="exampleSection">
+        <div>
+            @TODO
+        </div>
+        <fieldset id="preventDoubleSubmitFieldset"><legend>Code</legend>
+            <script>
+                ponCode("preventDoubleSubmitFieldset", []);
+            </script>
+        </fieldset>
+    </div>
+
+    <h2>one</h2>
+    <i>Event listener that will only fire once</i>
+    <div class="exampleSection">
+        <div>
+            @TODO
+        </div>
+        <fieldset id="oneFieldset"><legend>Code</legend>
+            <script>
+                ponCode("oneFieldset", []);
+            </script>
+        </fieldset>
+    </div>
+
+    <h2>eventListenerThrottled</h2>
+    <i>Event listener that will ignore consecutive calls until after x milliseconds of each responded event. ie Throttled</i>
+    <div class="exampleSection">
+        <div>
+            @TODO
+        </div>
+        <fieldset id="eventListenerThrottledFieldset"><legend>Code</legend>
+            <script>
+                ponCode("eventListenerThrottledFieldset", []);
+            </script>
+        </fieldset>
+    </div>
+
+    <h2>throttle</h2>
+    <i>Call a function, ignores calls during </i>
+    <div class="exampleSection">
+        <div>
+            @TODO
+        </div>
+        <fieldset id="throttleFieldset"><legend>Code</legend>
+            <script>
+                ponCode("throttleFieldset", []);
+            </script>
+        </fieldset>
+    </div>
+
 </body>
 </html>
