@@ -1,0 +1,52 @@
+Resumable.js
+<input type="file" accept="image/*" capture="camera" id="camera_input">
+let input = document.getElementById('camera_input');
+let canvas = document.getElementById('canvas');
+let context = canvas.getContext('2d');
+
+input.addEventListener('change', (event) => {
+let file = event.target.files[0];
+let reader = new FileReader();
+
+reader.onload = (e) => {
+let img = new Image();
+
+img.onload = () => {
+canvas.width = 600;  // Desired width
+canvas.height = 480;  // Desired height
+context.clearRect(0, 0, canvas.width, canvas.height);
+
+// Draw the image on the canvas
+context.drawImage(img, 0, 0, canvas.width, canvas.height);
+};
+
+img.src = e.target.result;
+};
+
+reader.readAsDataURL(file);
+});
+
+canvas.toBlob((blob) => {
+let file = new File([blob], 'resized_image.jpg', {type: 'image/jpeg'});
+
+// Now you can use this file object for upload.
+}, 'image/jpeg');
+<hr>
+tus-js-client
+<script>
+window.addEventListener('beforeunload', function (e) {
+  if (upload && upload._source) {
+    e.preventDefault();
+    e.returnValue = '';
+  }
+});
+</script>
+
+<hr>
+<pre>
+    Resumable.js: This is a JavaScript library providing multiple simultaneous, stable, fault-tolerant and resumable/restartable file uploads via the HTML5 File API. The library is designed to introduce fault-tolerance into the upload of large files through HTTP.
+Plupload: This is a JavaScript API for dealing with file uploads. It supports features like multiple file selection, file type filtering, request chunking, client-side image downsizing and more.
+Uppy: Uppy is a sleek, modular JavaScript file uploader that integrates seamlessly with any application. It’s fast, easy to use and lets you worry about more important problems than building a file uploader.
+Filepond: Filepond is a JavaScript library that can upload anything you throw at it, optimizes images for faster uploads, and offers a great, accessible, silky smooth user experience.
+DropzoneJS: DropzoneJS is an open source library that provides drag and-drop file uploads with image previews. It's lightweight, doesn't depend on any other library (like jQuery) and is highly customizable.
+</pre>

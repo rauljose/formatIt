@@ -11,13 +11,13 @@ class It_Dialog {
 
             // Create the dialog HTML
             const dialogHTML = `
-      <dialog class="it_dialog" id="${dialogId}" role="dialog" aria-labelledby="${dialogId}_title" aria-describedby="${dialogId}_desc" aria-modal="true" aria-live="assertive">
+      <dialog class="it_dialog" id="${dialogId}" role="alertdialog" aria-labelledby="${dialogId}_title" aria-describedby="${dialogId}_desc" aria-modal="true" aria-live="assertive">
         <div class="it_dialog_title">
           <h2 id="${dialogId}_title">${title}</h2>
           <button id="closeButton_${dialogId}" class="it_dialog_title_close" aria-label="Close">&times;</button>
         </div>
-        <div id="${dialogId}_desc">${message}</div>
-        <button id="readButton_${dialogId}" aria-label="${okLabel}">${okLabel}</button>
+        <div id="${dialogId}_desc" role="document">${message}</div>
+        <button id="readButton_${dialogId}" role="button" aria-label="${okLabel}">${okLabel}</button>
       </dialog>
     `;
 

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Foto</title>
+</head>
+<body>
+
+    <div style="margin:1em">
+        <label for="selectCamera">Camara: </label><select id="selectCamera"></select>
+        <button type="button" id="takePicture">Click</button>
+        <button type="button" id="cameraRetry">Retry</button>
+    </div>
+    <video id="video" autoplay></video>
+    <div>
+        <img id="capturedImage" src="" alt="Captured Picture">
+        <input type="hidden" id="lat" name="latitude">
+        <input type="hidden" id="lon" name="longitude">
+    </div>
+    <script>
+        function setupCamera() {
+            const videoElement = document.getElementById('video');
+            const selectCamera = document.getElementById('selectCamera');
+            const buttonTakePicture = document.getElementById('takePicture');
+            const buttonRetry = document.getElementById('cameraRetry');
+
+            // Check for MediaDevices support
+            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
+                navigator.mediaDevices.enumerateDevices()
+                    .then(populateCameraList)
+                    .catch(handleCameraError);
+            } else {
+                console.error('MediaDevices not supported');
+            }
+
+            function populateCameraList(devices) {
+                devices.forEach(device => {
+                    if (device.kind === 'videoinput') {
+                        const option = document.createElement('option');
+                        option.value = device.deviceId;
+                        option.text = device.label || `Camera ${selectCamera.length + 1}`;
+                        selectCamera.add(option);
+                    }
+                });
+
+                // Start with the first camera (if any)
+                if (selectCamera.options.length > 0) {
+                    startStream(selectCamera.value);
+                }
+            }
+
+            function handleCameraError(error) {
+                console.error('Error accessing cameras:', error);
+            }
+
+            function startStream(deviceId) {
+                const constraints = {
+                    video: { deviceId: deviceId ? { exact: deviceId } : true } // Select specific camera
+                };
+
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(stream => {
+                        videoElement.srcObject = stream;
+                        videoElement.play();
+                    })
+                    .catch(handleCameraError);
+            }
+
+            selectCamera.addEventListener('change', () => {
+                startStream(selectCamera.value);
+            });
+
+            buttonTakePicture.addEventListener('click', () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = videoElement.videoWidth;
+                canvas.height = videoElement.videoHeight;
+                canvas.getContext('2d').drawImage(videoElement, 0, 0);
+                // Resize the image
+                const resizedCanvas = document.createElement('canvas');
+                const desiredWidth = 640; //
+                const aspectRatio = canvas.width / canvas.height;
+                const desiredHeight = desiredWidth / aspectRatio;
+                resizedCanvas.width = desiredWidth;
+                resizedCanvas.height = desiredHeight;
+                resizedCanvas.getContext('2d').drawImage(canvas, 0, 0, desiredWidth, desiredHeight);
+                canvas.remove();
+                const imageData = resizedCanvas.toDataURL('image/jpeg', 0.8); // 0.7 for ~70% quality
+                const imageElement = document.getElementById('capturedImage');
+                imageElement.src = imageData;
+                resizedCanvas.toBlob(function(blob) {
+                    const imageFile = new File([blob], "capturedImage.jpg", {type: "image/jpeg"});
+                    document.getElementById('imageUpload').files = [imageFile];
+                    const stream = videoElement.srcObject;
+                    const tracks = stream.getTracks();
+                    tracks.forEach(track => track.stop());
+                    videoElement.srcObject = null;
+                    videoElement.style.display = 'none';
+                    resizedCanvas.remove();
+                }, 'image/jpeg', 0.8);
+            });
+
+            buttonRetry.addEventListener('click', () => {
+                startStream(selectCamera.value);
+            });
+        }
+    </script>
+    <script>
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, handleGeolocationError);
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+            }
+        }
+
+        function showPosition(position) {
+            document.getElementById('lat').value = position.coords.latitude;
+            document.getElementById('lon').value = position.coords.longitude;
+        }
+
+        function handleGeolocationError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    console.error("User denied the request for Geolocation.");
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    console.error("Location information isTIMEOUT:28");
+                    console.error("The request to get user location timed out.");
+                    break;
+                default:
+                    console.error("An unknown error occurred.");
+                    break;
+            }
+        }
+
+    </script>
+<script>
+    window.addEventListener('DOMContentLoaded', setupCamera);
+    window.addEventListener('DOMContentLoaded', getLocation);
+</script>
+</body>
+</html>

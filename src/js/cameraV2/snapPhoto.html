@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<body>
+<button id="start">Start</button>
+<div id="videoInputs"></div>
+<video id="video" width="640" height="480" autoplay></video>
+<button id="snap">Snap Photo</button>
+<canvas id="canvas" width="600" height="480"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.1.0/resumable.min.js"></script>
+<button id="upload">Upload Photo</button>
+
+<script>
+    let currentStream;
+    const videoEl = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const snap = document.getElementById('snap');
+    const videoInputs = document.getElementById('videoInputs');
+    const upload = document.getElementById('upload');
+
+    function stopMediaTracks(stream) {
+        stream.getTracks().forEach(track => {
+            track.stop();
+        });
+    }
+
+    function gotDevices(mediaDevices) {
+        videoInputs.innerHTML = '';
+        let count = 1;
+        mediaDevices.forEach(mediaDevice => {
+            if (mediaDevice.kind === 'videoinput') {
+                const button = document.createElement('button');
+                button.innerText = 'Camera ' + count++;
+                button.addEventListener('click', () => {
+                    if (typeof currentStream !== 'undefined') {
+                        stopMediaTracks(currentStream);
+                    }
+                    navigator.mediaDevices.getUserMedia({
+                        video: {
+                            deviceId: {
+                                exact: mediaDevice.deviceId
+                            },
+                            width: 600,
+                            height: 480
+                        }
+                    }).then(stream => {
+                        currentStream = stream;
+                        videoEl.srcObject = stream;
+                        return navigator.mediaDevices.enumerateDevices();
+                    }).catch(error => console.error(error));
+                });
+                videoInputs.appendChild(button);
+            }
+        });
+    }
+
+    navigator.mediaDevices.enumerateDevices().then(gotDevices);
+
+    // Draw image
+    snap.addEventListener("click", function() {
+        const context = canvas.getContext('2d');
+        context.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+    });
+
+    // Upload image
+    upload.addEventListener("click", function() {
+        canvas.toBlob((blob) => {
+            let file = new File([blob], 'image.jpg', {type: 'image/jpeg'});
+            var r = new Resumable({
+                target: '/upload', // set your server side upload script URL here
+                fileType: ['jpg'],
+                singleFile: true
+            });
+            if(!r.support) {
+                console.error('Resumable not supported!');
+            } else {
+                r.addFile(file);
+                r.upload();
+            }
+        }, 'image/jpeg');
+    });
+</script>
+</body>
+</html>
