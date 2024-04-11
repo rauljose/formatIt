@@ -5,34 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>Foto</title>
+    <style>
+        .messageError {
+            margin:0.5em; padding:0.3em;
+            border:1px red solid;
+            color: red;font-weight: bold;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
     <div style="margin:1em">
-        <label for="selectCamera">Camara: </label><select id="selectCamera"></select>
+        <label for="cameraSelect">Camara: </label><select id="cameraSelect"></select>
         <button type="button" id="takePicture">Click</button>
-        <button type="button" id="cameraRetry">Retry</button>
+        <button type="button" id="fotoUploadBtn" style="visibility: hidden">Save</button>
+        <button type="button" id="cameraRetry" style="visibility: hidden">Retry</button>
     </div>
+    <div class="messageError" id="messageError"></div>
     <video id="video" autoplay></video>
     <div>
-        <img id="capturedImage" src="" alt="Captured Picture">
-        <input type="hidden" id="lat" name="latitude">
-        <input type="hidden" id="lon" name="longitude">
+        <img id="capturedImage" src="" alt="">
+        <input type="hidden" id="lat" name="latitude" value="">
+        <input type="hidden" id="lon" name="longitude" value="">
+        <input type="file" id="imageUpload" name="imageUpload" style="display:none">
     </div>
+    <script>
+        let messagesDisplay = {
+            messageError: document.getElementById('messageError'),
+            set: function(message) {
+                this.messageError.innerHTML = message;
+                this.messageError.style.display = 'block';
+            },
+            append:function(message) {
+                this.messageError.innerHTML += "<div>" + message + "</div>";
+                this.messageError.style.display = 'block';
+            },
+
+            clear: function() {
+                this.messageError.innerHTML = '';
+                this.messageError.style.display = 'none';
+            },
+        }
+    </script>
     <script>
         function setupCamera() {
             const videoElement = document.getElementById('video');
-            const selectCamera = document.getElementById('selectCamera');
+            const cameraSelect = document.getElementById('cameraSelect');
             const buttonTakePicture = document.getElementById('takePicture');
             const buttonRetry = document.getElementById('cameraRetry');
-
+            const buttonUpload = document.getElementById('fotoUploadBtn');
+            messagesDisplay.clear();
             // Check for MediaDevices support
             if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
                 navigator.mediaDevices.enumerateDevices()
                     .then(populateCameraList)
                     .catch(handleCameraError);
             } else {
-                console.error('MediaDevices not supported');
+               messagesDisplay.set('MediaDevices not supported');
             }
 
             function populateCameraList(devices) {
@@ -40,19 +70,19 @@
                     if (device.kind === 'videoinput') {
                         const option = document.createElement('option');
                         option.value = device.deviceId;
-                        option.text = device.label || `Camera ${selectCamera.length + 1}`;
-                        selectCamera.add(option);
+                        option.text = device.label || `Camera ${cameraSelect.length + 1}`;
+                        cameraSelect.add(option);
                     }
                 });
 
                 // Start with the first camera (if any)
-                if (selectCamera.options.length > 0) {
-                    startStream(selectCamera.value);
+                if (cameraSelect.options.length > 0) {
+                    startStream(cameraSelect.value);
                 }
             }
 
             function handleCameraError(error) {
-                console.error('Error accessing cameras:', error);
+                messagesDisplay.append('Error accessing cameras: ' + error);
             }
 
             function startStream(deviceId) {
@@ -68,8 +98,8 @@
                     .catch(handleCameraError);
             }
 
-            selectCamera.addEventListener('change', () => {
-                startStream(selectCamera.value);
+            cameraSelect.addEventListener('change', () => {
+                startStream(cameraSelect.value);
             });
 
             buttonTakePicture.addEventListener('click', () => {
@@ -91,18 +121,27 @@
                 imageElement.src = imageData;
                 resizedCanvas.toBlob(function(blob) {
                     const imageFile = new File([blob], "capturedImage.jpg", {type: "image/jpeg"});
-                    document.getElementById('imageUpload').files = [imageFile];
+                    //document.getElementById('imageUpload').files = [imageFile];
                     const stream = videoElement.srcObject;
                     const tracks = stream.getTracks();
                     tracks.forEach(track => track.stop());
                     videoElement.srcObject = null;
                     videoElement.style.display = 'none';
+                    document.getElementById('capturedImage').style.display = '';
+                    buttonTakePicture.style.visibility = 'hidden';
+                    buttonUpload.style.visibility = 'visible';
+                    buttonRetry.style.visibility = 'visible';
                     resizedCanvas.remove();
                 }, 'image/jpeg', 0.8);
             });
 
             buttonRetry.addEventListener('click', () => {
-                startStream(selectCamera.value);
+                console.log("retruing", cameraSelect.value);
+                videoElement.style.display = '';
+                buttonTakePicture.style.visibility = 'visible';
+                buttonUpload.style.visibility = 'hidden';
+                buttonRetry.style.visibility = 'hidden';
+                startStream(cameraSelect.value);
             });
         }
     </script>
@@ -111,7 +150,7 @@
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(showPosition, handleGeolocationError);
             } else {
-                console.error('Geolocation is not supported by this browser.');
+                messagesDisplay.append('Geolocation is not supported by this browser.');
             }
         }
 
@@ -123,14 +162,13 @@
         function handleGeolocationError(error) {
             switch (error.code) {
                 case error.PERMISSION_DENIED:
-                    console.error("User denied the request for Geolocation.");
+                    messagesDisplay.append("Localización: Necesito el permiso y fue negado.");
                     break;
                 case error.POSITION_UNAVAILABLE:
-                    console.error("Location information isTIMEOUT:28");
-                    console.error("The request to get user location timed out.");
+                    messagesDisplay.append("Localización no disponible, Time Out.");
                     break;
                 default:
-                    console.error("An unknown error occurred.");
+                    messagesDisplay.append("Localización: Error inesperado.");
                     break;
             }
         }
