@@ -4,32 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>Foto</title>
+    <title>Foto1</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+    <link rel="stylesheet" href="css/theme.css">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            color: var(--md-sys-color-on-surface);
+            background-color: var(--md-sys-color-surface);
+        }
+    </style>
     <style>
         .messageError {
             margin:0.5em; padding:0.3em;
             border:1px red solid;
             color: red;font-weight: bold;
             display: none;
+            max-width: 95%;
+            width:fit-content;
+        }
+        .foto_video_container {width: 100%;margin:0 auto;padding:0.2em}
+        .foto_video_container .video {max-width: 90%;height:auto;object-fit: scale-down;}
+        .pageTitle {display:flex;flex-direction:row;flex-wrap: wrap;gap:0.6em;margin:0 0.5em;padding:0.3em;
+            color:white;background-color: #f0f0f0;border-bottom: 1px solid #ccc;
         }
     </style>
 </head>
 <body>
-
-    <div style="margin:1em">
-        <label for="cameraSelect">Camara: </label><select id="cameraSelect"></select>
-        <button type="button" id="takePicture">Click</button>
-        <button type="button" id="fotoUploadBtn" style="visibility: hidden">Save</button>
-        <button type="button" id="cameraRetry" style="visibility: hidden">Retry</button>
+    <header style="background-color:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary);
+    margin:0;padding:0.5em 1em;
+">
+        <span style="font-size:1.6em">&larr;</span> &nbsp;&nbsp;&nbsp;
+      Visita: La Castellana, Tecamachalco.
+    </header>
+    <main class="content">
+    <div style="margin:0.5em 0.3em;display:flex;flex-direction:row;flex-wrap: wrap;gap:0.6em">
+        <div><label>Camara: <select id="cameraSelect"></select></label></div>
+        <div><button type="button" id="takePicture">Click</button></div>
+        <div><button type="button" id="fotoUploadBtn" style="visibility: hidden">Save</button></div>
+        <div><button type="button" id="cameraRetry" style="visibility: hidden">Retry</button></div>
     </div>
     <div class="messageError" id="messageError"></div>
-    <video id="video" autoplay></video>
+    <div class="foto_video_container">
+        <video class="video" id="video" autoplay></video>
+    </div>
     <div>
         <img id="capturedImage" src="" alt="">
         <input type="hidden" id="lat" name="latitude" value="">
         <input type="hidden" id="lon" name="longitude" value="">
         <input type="file" id="imageUpload" name="imageUpload" style="display:none">
     </div>
+    </main>
     <script>
         let messagesDisplay = {
             messageError: document.getElementById('messageError'),
@@ -56,7 +84,7 @@
             const buttonRetry = document.getElementById('cameraRetry');
             const buttonUpload = document.getElementById('fotoUploadBtn');
             messagesDisplay.clear();
-            // Check for MediaDevices support
+
             if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
                 navigator.mediaDevices.enumerateDevices()
                     .then(populateCameraList)
@@ -70,7 +98,7 @@
                     if (device.kind === 'videoinput') {
                         const option = document.createElement('option');
                         option.value = device.deviceId;
-                        option.text = device.label || `Camera ${cameraSelect.length + 1}`;
+                        option.text = device.label || `# ${cameraSelect.length + 1}`;
                         cameraSelect.add(option);
                     }
                 });
