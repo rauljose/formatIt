@@ -58,8 +58,52 @@
         <input type="file" id="imageUpload" name="imageUpload" style="display:none">
     </div>
     </main>
+    <div><i>v 1.0.1</i></div>
     <script>
-        let messagesDisplay = {
+        function checkBrowser() {
+            var missing = []
+            if(!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices)
+                missing.push("mediaDevices");
+            if(!window.File)
+                missing.push("File");
+            if(!window.MediaStream)
+                missing.push("MediaStream");
+            else if(!window.MediaStream.prototype.getTracks) // Safari
+                missing.push("MediaStream.getTracks");
+            return missing.length === 0;
+        }
+        function isSafari() {
+            var ua = navigator.userAgent.toLowerCase();
+            return (ua.indexOf('safari') !== -1 && ua.indexOf('chrome') === -1 && ua.indexOf('crios') === -1 && ua.indexOf('fxios') === -1);
+        }
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            var message = [
+                'Message: ' + msg,
+                'URL: ' + url,
+                'Line: ' + lineNo,
+                'Column: ' + columnNo,
+               // 'Error object: ' + JSON.stringify(error)
+            ].join(' - ');
+            alert(message);
+            return false;
+        };
+
+        if ('onunhandledrejection' in window) {
+
+            window.onunhandledrejection = function(event) {
+                let summary = 'Unhandled promise rejection: \n';
+                summary += 'Message: ' + event.reason.message + '\n';
+                if (event.reason instanceof Error) {
+                    summary += 'Stack: ' + event.reason.stack;
+                }
+                alert(summary);
+            };
+        } else {
+            console.warning('This browser does not support window.onunhandledrejection');
+        }
+    </script>
+    <script>
+        var messagesDisplay = {
             messageError: document.getElementById('messageError'),
             set: function(message) {
                 this.messageError.innerHTML = message;
@@ -78,11 +122,11 @@
     </script>
     <script>
         function setupCamera() {
-            const videoElement = document.getElementById('video');
-            const cameraSelect = document.getElementById('cameraSelect');
-            const buttonTakePicture = document.getElementById('takePicture');
-            const buttonRetry = document.getElementById('cameraRetry');
-            const buttonUpload = document.getElementById('fotoUploadBtn');
+            var videoElement = document.getElementById('video');
+            var cameraSelect = document.getElementById('cameraSelect');
+            var buttonTakePicture = document.getElementById('takePicture');
+            var buttonRetry = document.getElementById('cameraRetry');
+            var buttonUpload = document.getElementById('fotoUploadBtn');
             messagesDisplay.clear();
 
             if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
@@ -94,9 +138,9 @@
             }
 
             function populateCameraList(devices) {
-                devices.forEach(device => {
+                devices.forEach(function(device) {
                     if (device.kind === 'videoinput') {
-                        const option = document.createElement('option');
+                        var option = document.createElement('option');
                         option.value = device.deviceId;
                         option.text = device.label || `# ${cameraSelect.length + 1}`;
                         cameraSelect.add(option);
@@ -114,45 +158,47 @@
             }
 
             function startStream(deviceId) {
-                const constraints = {
+                var constraints = {
                     video: { deviceId: deviceId ? { exact: deviceId } : true } // Select specific camera
                 };
 
                 navigator.mediaDevices.getUserMedia(constraints)
-                    .then(stream => {
+                    .then(function(stream) {
                         videoElement.srcObject = stream;
                         videoElement.play();
                     })
                     .catch(handleCameraError);
             }
 
-            cameraSelect.addEventListener('change', () => {
+            cameraSelect.addEventListener('change', function() {
                 startStream(cameraSelect.value);
             });
 
-            buttonTakePicture.addEventListener('click', () => {
-                const canvas = document.createElement('canvas');
+            buttonTakePicture.addEventListener('click', function() {
+                var canvas = document.createElement('canvas');
                 canvas.width = videoElement.videoWidth;
                 canvas.height = videoElement.videoHeight;
                 canvas.getContext('2d').drawImage(videoElement, 0, 0);
                 // Resize the image
-                const resizedCanvas = document.createElement('canvas');
-                const desiredWidth = 640; //
-                const aspectRatio = canvas.width / canvas.height;
-                const desiredHeight = desiredWidth / aspectRatio;
+                var resizedCanvas = document.createElement('canvas');
+                var desiredWidth = 640; //
+                var aspectRatio = canvas.width / canvas.height;
+                var desiredHeight = desiredWidth / aspectRatio;
                 resizedCanvas.width = desiredWidth;
                 resizedCanvas.height = desiredHeight;
                 resizedCanvas.getContext('2d').drawImage(canvas, 0, 0, desiredWidth, desiredHeight);
                 canvas.remove();
-                const imageData = resizedCanvas.toDataURL('image/jpeg', 0.8); // 0.7 for ~70% quality
-                const imageElement = document.getElementById('capturedImage');
+                var imageData = resizedCanvas.toDataURL('image/jpeg', 0.8); // 0.7 for ~70% quality
+                var imageElement = document.getElementById('capturedImage');
                 imageElement.src = imageData;
                 resizedCanvas.toBlob(function(blob) {
-                    const imageFile = new File([blob], "capturedImage.jpg", {type: "image/jpeg"});
+                    var imageFile = new File([blob], "capturedImage.jpg", {type: "image/jpeg"});
                     //document.getElementById('imageUpload').files = [imageFile];
-                    const stream = videoElement.srcObject;
-                    const tracks = stream.getTracks();
-                    tracks.forEach(track => track.stop());
+                    var stream = videoElement.srcObject;
+                    var tracks = stream.getTracks();
+                    tracks.forEach(function(track) {
+                        track.stop()
+                    });
                     videoElement.srcObject = null;
                     videoElement.style.display = 'none';
                     document.getElementById('capturedImage').style.display = '';
@@ -163,8 +209,7 @@
                 }, 'image/jpeg', 0.8);
             });
 
-            buttonRetry.addEventListener('click', () => {
-                console.log("retruing", cameraSelect.value);
+            buttonRetry.addEventListener('click', function() {
                 videoElement.style.display = '';
                 buttonTakePicture.style.visibility = 'visible';
                 buttonUpload.style.visibility = 'hidden';
@@ -201,6 +246,49 @@
             }
         }
 
+    </script>
+    <script>
+        function paSafa() {
+            // camera facing mode in safari
+            function startStream(deviceId) {
+                var constraints = {
+                    video: {
+                        deviceId: deviceId ? { exact: deviceId } : undefined,
+                        facingMode: 'user' // Prefer the front camera (user facing). Change to 'environment' for back camera.
+                    },
+                };
+
+                navigator.mediaDevices.getUserMedia(constraints)
+                    .then(function(stream) {
+                        videoElement.srcObject = stream;
+                        videoElement.play();
+                    })
+                    .catch(handleCameraError);
+            }
+            // stop tracks
+            buttonTakePicture.addEventListener('click', function() {
+                // Start of the existing event listener code...
+                var imageData = resizedCanvas.toDataURL('image/jpeg', 0.8);
+                var imageElement = document.getElementById('capturedImage');
+                imageElement.src = imageData;
+                resizedCanvas.toBlob(function(blob) {
+                    var imageFile = new File([blob], "capturedImage.jpg", {type: "image/jpeg"});
+                    var stream = videoElement.srcObject;
+                    if(stream) {
+                        // Close the entire stream instead of individual tracks
+                        stream.getTracks().forEach(track => track.stop());
+
+                        videoElement.srcObject = null;
+                        videoElement.style.display = 'none';
+                        document.getElementById('capturedImage').style.display = '';
+                        buttonTakePicture.style.visibility = 'hidden';
+                        buttonUpload.style.visibility = 'visible';
+                        buttonRetry.style.visibility = 'visible';
+                        resizedCanvas.remove();
+                    }
+                }, 'image/jpeg', 0.8);
+            });
+        }
     </script>
 <script>
     window.addEventListener('DOMContentLoaded', setupCamera);
