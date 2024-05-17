@@ -1,4 +1,7 @@
-const itHtml = {
+
+// noinspection JSUnusedGlobalSymbols
+
+class itHtmlClass {
 
     /**
      * The selected option's css class is added to the select class, the previous selected option class is removed
@@ -26,7 +29,7 @@ const itHtml = {
      *   </select>
      * @param {string|event} eventOrId
      */
-    selectColorea: function(eventOrId) {
+    static selectColorea(eventOrId) {
         let selectElement = typeof eventOrId === 'string' ? document.getElementById(eventOrId) : eventOrId.target;
         let prevClass = selectElement.dataset.selectedOptionClass;
         if(prevClass)
@@ -35,7 +38,7 @@ const itHtml = {
         if(optionClass.length)
             selectElement.classList.add(optionClass);
         selectElement.dataset.selectedOptionClass = optionClass;
-    },
+    }
 
     /**
      * Retrieves or sets the value of a radio button with the specified name.
@@ -45,11 +48,11 @@ const itHtml = {
      * @returns {*} If no value is provided, returns the value of the selected radio button.
      *               If a value is provided, returns undefined.
      */
-    radioButtonValue: function(name, value) {
+    static radioButtonValue(name, value) {
         if(typeof value === 'undefined')
             return (document.querySelector(`input[name='${name}']:checked`) || {}).value || undefined;
         (document.querySelector(`input[name='${name}'][value='${value}']`) || {}).checked=true;
-    },
+    }
 
     /**
      * Create and display a blocking overlay on the page, preventing user interaction.
@@ -59,7 +62,7 @@ const itHtml = {
      * @param {number|null} [timeout=null] - The duration in milliseconds after which the overlay should be automatically removed.
      *                                       Pass null for no timeout. The default is null.
      */
-    blockUI: function(overlayClassName = "", overlayElementOrId = "itHtml_BlockUI", timeout = null) {
+    static blockUI(overlayClassName = "", overlayElementOrId = "itHtml_BlockUI", timeout = null) {
         let overlay;
         if(document.getElementById(overlayElementOrId)) {
             overlay = document.getElementById(overlayElementOrId);
@@ -68,7 +71,7 @@ const itHtml = {
             overlay.style.display = "block";
         } else {
             overlay = document.createElement("div");
-            overlay.id = overlayElementOrId;
+            overlay.id = overlayElementOrId
             overlay.dataset.ithtml = "auto";
             if(typeof overlayClassName === 'string' && overlayClassName.length)
                 overlay.classList.add(overlayClassName);
@@ -84,15 +87,15 @@ const itHtml = {
             document.body.appendChild(overlay);
         }
         if(timeout && typeof timeout === 'number')
-            setTimeout(() => this.unblockUI(overlayElementOrId), timeout);
-    },
+            setTimeout(() => itHtmlClass.unblockUI(overlayElementOrId), timeout);
+    }
 
     /**
      * Removes the blocking overlay from the DOM.
      *
      * @param {string} overlayElementOrId - The ID of the overlay element to be removed. Default value is "itHtml_BlockUI".
      */
-    unblockUI: function(overlayElementOrId = "itHtml_BlockUI") {
+    static unblockUI( overlayElementOrId = "itHtml_BlockUI") {
         let overlay = typeof overlayElementOrId === 'string' ?
             document.getElementById(overlayElementOrId) : overlayElementOrId;
         if(overlay)
@@ -100,11 +103,10 @@ const itHtml = {
                 document.body.removeChild(overlay);
             else
                 overlay.style.display = "none";
-    },
+    }
 
-
-    preventDoubleSubmit: function(elementOrformId, overlayClassName = "", overlayId = "itHtml_BlockUI", timeout = null) {
-        let form = typeof elementOrformId === 'string' ? document.getElementById(elementOrformId) : elementOrformId;
+    static preventDoubleSubmit(elemntOrformId, overlayClassName = "", overlayId = "itHtml_BlockUI", timeout = null) {
+        let form = typeof elemntOrformId === 'string' ? document.getElementById(elemntOrformId) : elemntOrformId;
         if(form) {
             if(form.classList.contains('it_submitting')) {
                 form.preventDefault();
@@ -113,15 +115,15 @@ const itHtml = {
             form.addEventListener('submit', function(e) {
                 if(this.checkValidity()) {
                     e.preventDefault();
-                    this.classList.add('it_submitting');
-                    itHtml.blockUI(overlayClassName, overlayId, timeout);
+                    this.classList.add('it_submitting')
+                    itHtmlClass.blockUI(overlayClassName, overlayId, timeout);
                     setTimeout(() => this.submit(), 0);
                 } else {
                     this.reportValidity();
                 }
             });
         }
-    },
+    }
 
     /**
      * Attach an event listener that will run once to a given element
@@ -131,13 +133,13 @@ const itHtml = {
      * @param {string} event - The event type to listen for
      * @param {Function} callback - The callback function to execute when the event is fired
      */
-    one: function(elementOrId, event, callback) {
+    one(elementOrId, event, callback) {
         let element = typeof elementOrId === 'string' ? document.getElementById(elementOrId) : elementOrId;
         element.addEventListener(event, function handler(ev) {
             ev.currentTarget.removeEventListener(ev.type, handler);
             callback(ev);
         });
-    },
+    }
 
     /**
      * throttledFunction will only execute once every `delayMilliSeconds` milliseconds, other calls are ignored.
@@ -146,7 +148,7 @@ const itHtml = {
      * @param {number} [delayMilliSeconds=500] - The number of milliseconds to delay between function invocations.
      * @returns {function} - The throttled function.
      */
-    throttle: function(throttledFunction, delayMilliSeconds = 500) {
+    throttle(throttledFunction, delayMilliSeconds = 500) {
         let lastCall = 0;
         return function(...args) {
             const now = new Date().getTime();
@@ -155,7 +157,7 @@ const itHtml = {
             lastCall = now;
             return throttledFunction(...args);
         }
-    },
+    }
 
     /**
      * The listener's callback will only be called once every delayMilliSeconds,
@@ -166,10 +168,10 @@ const itHtml = {
      * @param {function} callback - The callback function to be called when the event is triggered.
      * @param {number} [delayMilliSeconds=500] - The delay in milliseconds before invoking the callback function.
      */
-    eventListenerThrottled: function(elementOrId, event, callback, delayMilliSeconds = 500) {
+    eventListenerThrottled(elementOrId, event, callback, delayMilliSeconds = 500) {
         let element = typeof elementOrId === 'string' ? document.getElementById(elementOrId) : elementOrId;
-        let throttledCallback = this.throttle(callback, delayMilliSeconds);
+        let throttledCallback = throttle(callback, delayMilliSeconds);
         element.addEventListener(event, throttledCallback);
-    },
+    }
 
-};
+}

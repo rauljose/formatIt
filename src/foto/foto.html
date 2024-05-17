@@ -87,9 +87,7 @@
             alert(message);
             return false;
         };
-
         if ('onunhandledrejection' in window) {
-
             window.onunhandledrejection = function(event) {
                 let summary = 'Unhandled promise rejection: \n';
                 summary += 'Message: ' + event.reason.message + '\n';
@@ -98,8 +96,6 @@
                 }
                 alert(summary);
             };
-        } else {
-            console.warning('This browser does not support window.onunhandledrejection');
         }
     </script>
     <script>
