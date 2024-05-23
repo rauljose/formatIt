@@ -85,3 +85,40 @@ function titleCase(str) {
     }
     return str[0].toUpperCase() + str.substring(1)
 }
+
+/**
+ * css priority by Specificity 1 selector 1, 0 equal, 2 selector2
+ *
+ * @param {a:num, b:num, c:num} selector1
+ * @param {a:num, b:num, c:num} selector2
+ * @returns {number} >0 selector1: greater Specificity. <0 selector2: greater Specificity. =0 Equal Specificity
+ *
+ * @see https://www.bram.us/2022/06/28/the-css-cascade-a-deep-dive-2022-06-09-css-day/
+ *      https://drafts.csswg.org/css-cascade-5
+ * @notes
+ * 0 Transitions
+ * 1 Origin & Importance
+ *      !important in your author styles, the declaration moves from the Normal Author Declarations origin to the Important Author Declarations origin.
+ * 2 Context
+ * 3 Element attached styles (style tag)
+ * 4 Layers
+ * 5 Specificity
+ * 6 Order of appearance
+ */
+function cssSpecificityCompare(selector1, selector2)  {
+    if (selector1.a === selector2.a) {
+        if (selector1.b === selector2.b)
+            return selector1.c - selector2.c;
+        return selector1.b - selector2.b;
+    }
+    return selector1.a - selector2.a;
+}
+
+// ? for text between quotes
+// '/\'(?:[^\']|\'\')*\'/miU';
+// SQL Parser
+// $re = '/\s+(?=SELECT|FROM|WHERE|ORDER\s+BY|GROUP\s+BY|HAVING|WITH ROLLUP)/miU';
+// $re2 = '/\s+(?=LEFT JOIN|INNER JOIN|RIGHT JOIN|STRAIGHT JOIN|LEFT OUTER JOIN|RIGHT OUTER JOIN)/miU';
+
+// CSS line-clamp
+// clamp & font-size: https://css-tricks.com/linearly-scale-font-size-with-css-clamp-based-on-the-viewport/ clamp & font-size:
