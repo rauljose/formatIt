@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Daig</title>
+    <script src="https://kit.fontawesome.com/0b04cc81cb.js" crossorigin="anonymous"></script>
+    <style>
+        BODY {margin:0;padding:0;}
+        .content {margin:0.5em;}
+        .ins {margin:0.5em; padding:0.5em;border:1px blue solid;color:blue;font-family: "Courier New",Courier,monospace}
+        .flexBar {display:flex; flex-wrap: wrap; flex-direction: row; justify-content: space-between}
+        .flexRow {display:flex; flex-wrap: wrap; flex-direction: row; justify-content: left;gap:2em}
+        .diag {margin:1em 1em;padding:1.5em;border:1px blue solid}
+        .cursor {cursor:pointer}
+    </style>
+    <script>
+        async function diagramDraw() {
+            const url = "https://kroki.io/mermaid/svg";
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+                body: document.getElementById("diag_text").innerText
+            });
+
+            if (response.ok) {
+                const svg = await response.text();
+                const imageElement = document.getElementById("diag_image")
+                imageElement.src = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+            } else {
+                console.error("Error generating diagram:", response.statusText);
+            }
+        }
+
+
+    </script>
+</head>
+<body>
+<header>
+
+</header>
+<div class="content">
+    <pre id="diag_text" class="ins" contenteditable="true">
+
+    </pre>
+    <div class="flexBar">
+       <div><button type="button" onclick="diagramDraw()">Draw</button></div>
+        <div><a target="_blank" href="https://kroki.io/examples.html">Examples</a></div>
+    </div>
+</div>
+<div id="diag_imageDiv" class="diag">
+    <img id="diag_image" alt="diagram">
+</div>
+
+<style>
+    TABLE.crud {border-collapse: collapse; color:#00F;margin:1em;
+        border:3px lightsteelblue outset;border-top:none
+    }
+    TABLE.crud CAPTION {font-weight: bold;font-size:1.4em;padding:0.1em;
+        border:3px lightsteelblue outset;border-bottom:none
+    }
+    TABLE.crud TH {border:1px lightsteelblue solid}
+    TABLE.crud TD {border:1px lightsteelblue solid;vertical-align: top;padding:0.3em 0.6em}
+</style>
+<fieldset style="width:fit-content;margin:1em"><legend>Catálogos</legend><div class="flexRow">
+    <table class="crud"><caption><div class="flexBar"><div>Tipos</div>
+                <div>
+                    <i title="Agregar, nuevo" class="fa-solid fa-plus cursor"></i> |
+                    <i title="Exporta Excel" class="fa-regular fa-file-excel cursor"></i> |
+                    <i title="Exporta PDF" class="fa-regular fa-file-pdf cursor"></i>
+                </div></div>
+        </caption>
+        <tr><td>
+            <i title="Consultar" class="fa-regular fa-file cursor"></i> |
+            <i title="Editar/Actualizar" class="fa-solid fa-file-pen cursor"></i> |
+            <i title="Investigar sobre ..." class="fa-solid fa-eye cursor"></i> |
+            <i title="Borrar, Eliminar/Inactivar" class="fa-solid fa-trash cursor"></i>
+            <td>Nombre único<td style="text-align: right">sus datos</td>
+        </tr>
+        <tr><td style="border-right:none">....</td></tr>
+    </table>
+    <table class="crud"><caption><div class="flexBar"><div>Tipos</div>
+        <div>
+            <i title="Agregar, nuevo" class="fa-solid fa-plus cursor"></i> |
+            <i title="Exporta Excel" class="fa-regular fa-file-excel cursor"></i> |
+            <i title="Exporta PDF" class="fa-regular fa-file-pdf cursor"></i>
+        </div></div>
+    </caption>
+        <tr><td>
+            <i title="Editar/Actualizar" class="fa-solid fa-file-pen cursor"></i> |
+            <i title="Investigar sobre ..." class="fa-solid fa-eye cursor"></i> |
+            <i title="Borrar, Eliminar/Inactivar" class="fa-solid fa-trash cursor"></i>
+            <td>Nombre único<td style="text-align: right">sus datos</td></tr>
+        <tr><td style="border-right:none">....</td></tr>
+    </table>
+    <table class="crud"><caption><div class="flexBar"><div>Tipos</div>
+        <div>
+            <i title="Agregar, nuevo" class="fa-solid fa-plus cursor"></i> |
+            <i title="Exporta Excel" class="fa-regular fa-file-excel cursor"></i> |
+            <i title="Exporta PDF" class="fa-regular fa-file-pdf cursor"></i>
+        </div></div>
+    </caption>
+        <tr><td>Nombre único<td style="text-align: right">sus datos</td></tr>
+        <tr><td style="border-right:none">....</td></tr>
+    </table>
+</div></fieldset>
+<hr>
+</body>
+</html>

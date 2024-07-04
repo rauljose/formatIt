@@ -40,7 +40,7 @@ A.it_menu:active {color:inherit;text-decoration:none;}
 
 /* DETAILS */
 DETAILS.it_details {}
-DETAILS.it_details > SUMMARY {color:darkgreen}
+DETAILS.it_details > SUMMARY { margin: auto 0.5em;color:darkgreen; cursor:pointer}
 DETAILS.it_details > summary + div:first-of-type {
     border:1px darkgreen solid;
     margin:1em; padding:0.3em;

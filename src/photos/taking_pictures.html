@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Taking pictures</title>
+    <style>
+      BODY {line-height: 1.3em}
+      DETAILS.it {}
+      DETAILS.it > SUMMARY {color:darkgreen; cursor:pointer; margin: auto 0.5em;}
+      DETAILS.it > summary + div:first-of-type {
+        border:1px darkgreen solid;
+        margin:1em; padding:0.3em;
+      }
+      .it {border-collapse: collapse;
+        border:1px silver solid;
+        border-right:4px outset #0b3e6f;
+        border-bottom:4px outset #0b3e6f;
+        font-weight: normal}
+      .it CAPTION {
+        border:1px #0b3e6f solid;
+        border-right:4px outset #0b3e6f;
+        border-bottom: none;
+        font-weight: bold; padding:0.2em; font-size:0.8em;
+        vertical-align: middle;text-align:center;}
+      .it TH {border:1px #0b3e6f solid;font-weight: bold; padding:0.1em 0.4em;vertical-align: top;text-align:center;}
+      .it TH.row {border-left:none;border-right:none;}
+      .it TD {border:1px #0b3e6f solid;font-weight: normal; padding:0.1em 0.4em;vertical-align:top;text-align:left;}
+      .it TD.row {border-left:none;border-right:none;}
+      .it TD.der {text-align: right}
+      .it TD.right {text-align: right}
+      .it TD.cen {text-align: center}
+      
+      
+      ARTICLE.it {
+        margin:1em;padding:0.3em;
+        width:fit-content;
+        border:3px whitesmoke outset;padding:0.5em 1em
+      }
+      DL.it {border:3px whitesmoke outset;padding:0.5em 1em}
+      DL.it DT {font-size:1.7em;font-weight: bold; margin:0.5em 0.5em 0 1em}
+      DL.it DD {margin-top:0.5em;margin-bottom:2em}
+      LI {margin:0.36em auto}
+      .main_diff {}
+      .f_number {}
+      .shutter_number {}
+      .iso_number {}
+    </style>
+</head>
+<body>
+  <h1>Picture Click</h1>
+
+  <article class="it">
+    <h2>Depth of Field, Movement, Grainy</h2>
+      <dl class="it">
+         <dt>Aperture or F number</dt>
+          <dd>
+              The opening in the lens, the amount of light that enters the camera
+              implies: <span class="main_diff">Depth of Field: How many planes are in focus.</span>
+           <ul>
+             <li><b>Smaller f-number</b> <span class="f_number">1.8</span> More Light <b>Fewer planes in focus</b>, allows faster shutter speeds</li>
+             <li><b>Larger f-number</b> <span class="f_number">22</span>  Less Light <b>More planes in focus</b>, requires slower shutter speeds</li>
+           </ul>
+            <details class="it"><summary>Tablita</summary><div>
+              <table class="it">
+                <caption>Apertura, (número) F</caption>
+                <thead>
+                <tr><th>F</th><th>Enfocado</th><th>Speed</th><th>ISO</th><th>Lente</th><th>Notas</th>
+                </thead>
+                <tbody>
+                <tr><td>Chico <span>1.8</span>
+                  <td>Menos Planos enfocados
+                  <td>Puedes más rápido <span>1/1000</span>
+                  <td>Más bajos</td>
+                  <td>Entra <b>más luz</b>.<br>El lente está más abierto.</td>
+                  <td rowspan="2">Un F de 1 entra tanta luz como a tu ojo, ¡de 2 la mitad!</td>
+                <tr><td>Grande <span>22</span>
+                  <td>Más planos enfocados
+                  <td>Necesita más lento <span>1/60</span>
+                  <td>Más Altos</td>
+                  <td>Entra <b>menos luz</b>.<br>El lente está más cerrado.</td>
+                </tbody>
+                <footer>
+                  <tr><td colspan="6">
+                    <ul>
+                      <li>Todo enfocado: Seleccionar el F más grande que permita velocidad de 1/60 o más, con el ISO más bajo posible. Enfocar al centro. * Si otro toma la fota 1/125 o más.
+                    </ul>
+                </footer>
+              </table>
+
+            </div></details>
+         </dd>
+
+         <dt>Shutter Speed or Speed</dt>
+          <dd>
+            Determines how long the camera's sensor is exposed to light.
+            implies <span class="main_diff">Freeze/blur subject or camera movement</span>
+           <ul>
+             <li><b>Faster</b> <span class="shutter_number">1000</span> freezes motion, but requires more light</li>
+             <li><b>Slower</b> <span class="shutter_number">60</span>  causes speed blur, or blurs if camera is not held steady, requires less light</li>
+           </ul>
+
+         </dd>
+
+         <dt>ISO or ASA</dt>
+          <dd>
+           Sensitivity of the camera's sensor to light
+            implies <span class="main_diff">How much light is needed</span>
+           <ul>
+             <li><b>Lower</b> <span class="iso_number">64</span> Greater quality, less pixelated or grainy, needs more light</li>
+             <li><b>Higher</b> <span class="iso_number">800</span> Lower quality, more pixelated or grainy, needs less light</li>
+           </ul>
+         </dd>
+      </dl>
+
+
+  </article>
+</body>
+</html>
