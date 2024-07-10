@@ -248,7 +248,118 @@ Where:
 https://chatuml.com/edit/new
 https://plantuml.com/guide
 http://www.plantuml.com/plantuml/uml/SoWkIImgAStDuUBY0ZEvYiipIv8p53HAKejBx3MvaXEBKnKq59Bpyr8oIpBpynGS5JIvh49IAqeK3AqnPPtWiaPOP9tXiiPOP5tWiYPOP5tXigRMNAbvAH1tWboTNy0510v0CQ0_0000
+    <hr>
 
+
+
+@startuml
+state Menu {
+}
+
+state Registra_Actividad {
+        [*] --> Captura
+        [*] --> Menu
+    }
+
+    state Mis_Pendientes {
+        [*] --> Lista_Pendientes
+        Lista_Pendientes --> Registra_Actividad
+        [*] --> Menu
+    }
+
+    Registra_Actividad -> Lista_Pendientes
+
+    state checaLogIn {
+      [*] --> Login <<choice>>
+      Login --> [*] : Fallos
+      Login --> Registra_Actividad : Ok
+    }
+
+    state Inicia {
+      [*] --> Login1 <<choice>>
+      Login1 --> [*] : Fallos
+      Login1 --> Mis_Pendientes : Ok
+    }
+
+    [*] --> checaLogIn : Notificación
+    [*] --> Inicia : Abre
+
+        Menu --> Deliveroo
+        Menu --> Promociones
+        Menu --> Eventos
+        Menu --> Define
+        Menu --> Administra
+
+    state "Menú y/o Barra Navegación" as Menu
+@enduml
+
+
+
+<hr>
+    @startuml
+State1 -> State2
+Ba3 --> State2
+Ba3 --> State4
+
+State4 --> Decision <<choice>>
+Decision --> State1 : redo
+Decision --> Ba3 : top
+State4 --> [*] : else
+state State2 #blue;line:yellow;text:yellow
+
+state "New State 2 Label" as State2
+@enduml
+<hr>
+    @startuml
+header some header
+footer some footer
+title My title
+caption This is caption
+legend
+The legend
+end legend
+
+
+[*] --> State1 : Notified
+State1 -> State2
+Ba3 --> State2
+Ba3 --> State4
+
+State4 --> Decision <<choice>>
+Decision --> State1 : redo
+Decision --> Ba3 : top
+Decision --> [*] : else
+
+    state State2 #blue;line:yellow;text:yellow
+@enduml
+    <hr>
+    @startuml
+abstract ATest {
+  {static} +String id
+  {abstract} -void doit()
+}
+
+class Test {
+  -int count
+  -int max
+  -int increment
+  -void doit()
+}
+
+ATest <|-- Test
+
+note right of Test::doit()
+{{
+  skinparam backgroundcolor transparent
+  start
+
+  while (count < max?)
+    :count = count + increment;
+  endwhile
+
+  stop
+}}
+    <hr>
 @startuml
 Bob -> Alice : hello
 Bob -> Flight : look
@@ -394,7 +505,42 @@ json Cajita {
 "color": ["Red", "Green"]
 }
 @enduml
+<hr>
+@startuml
+[User] as user
+[Notification System] as notification
+[HandleClick] as handleClick
+[Authentication Service] as auth
+[Page Service] as page
 
+user --> notification : receives and clicks
+notification --> handleClick : triggers
+
+handleClick --> auth : uses
+handleClick --> page : uses
+
+note right of handleClick
+  class HandleClick {
+    - authService: AuthenticationService
+    - pageService: PageService
+    + process(notification: Notification): void
+    - checkUserLoggedIn(): boolean
+    - openPage(pageId: String): void
+    - showLoginScreen(): void
+  }
+end note
+
+note bottom of handleClick
+  Flow:
+  1. User receives and clicks notification
+  2. HandleClick.process() is called
+  3. If user is logged in, open indicated page
+  4. If not logged in, show login screen,
+     user logs in, then open indicated page
+  5. User interacts with the page
+end note
+
+@enduml
 </pre>
 </body>
 </html>
