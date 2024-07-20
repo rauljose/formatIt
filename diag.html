@@ -25,7 +25,6 @@
                 },
                 body: document.getElementById("diag_text").innerText
             });
-
             if (response.ok) {
                 const svg = await response.text();
                 const imageElement = document.getElementById("diag_image")

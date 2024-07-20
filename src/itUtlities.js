@@ -1,3 +1,4 @@
+// vChanged
 function empty(v) {
     if(typeof v === 'undefined' || null === v)
         return true;

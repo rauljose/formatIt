@@ -5,6 +5,7 @@
  * @param {string|HTMLElement|NodeList|Array|jQuery} selector - CSS selector, NodeList, Array of elements, or jQuery object to fit its text to its width
  * @param {number} [minFontSizePx=8] - The minimum font size in pixels. Defaults to 8px.
  */
+
 function itFitText(selector, minFontSizePx = 8) {
     var elements = [], error = false;
     if(isNaN(minFontSizePx) || minFontSizePx < 1)

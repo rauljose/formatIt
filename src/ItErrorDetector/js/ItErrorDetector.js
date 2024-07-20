@@ -1,5 +1,6 @@
 // noinspection JSUnusedLocalSymbols
 
+// vChanged
 function ItErrorDetector(url) {
     if(!(this instanceof ItErrorDetector))
         throw new Error("ERROR: usage: var itErrorDetector = new ItErrorDetector('/api/errorlog');");
