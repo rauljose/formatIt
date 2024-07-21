@@ -5,6 +5,7 @@
  * extend/copy this class, pass it to FormatIt constructor override: #fieldNameFormat, #rowFormats
  *
  */
+
 class FormatItFormats {
     /* Required properties */
     ID = { attributes:{class:"der id"}}

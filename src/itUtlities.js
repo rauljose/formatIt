@@ -1,3 +1,4 @@
+// vChanged
 function empty(v) {
     if(typeof v === 'undefined' || null === v)
         return true;
@@ -122,3 +123,79 @@ function cssSpecificityCompare(selector1, selector2)  {
 
 // CSS line-clamp
 // clamp & font-size: https://css-tricks.com/linearly-scale-font-size-with-css-clamp-based-on-the-viewport/ clamp & font-size:
+
+
+
+// Reduces the number of unnecessary function calls, improving performance and user experience by ensuring that the function is only called after the user has stopped performing the triggering action
+
+function debounce(func, delay) {
+    let timeoutId;
+    return function(...args) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => func.apply(this, args), delay);
+    };
+}
+
+const search = debounce((query) => {
+    console.log(`Searching for ${query}`);
+}, 300);
+
+document.getElementById('searchInput').addEventListener('input', (event) => {
+    search(event.target.value);
+});
+
+    // Throttling ensures that a function is called at most once in a specified time period
+    function throttle(func, interval) {
+        let lastCall = 0;
+        return function(...args) {
+            const now = Date.now();
+            if (now - lastCall >= interval) {
+                lastCall = now;
+                func.apply(this, args);
+            }
+        };
+    }
+
+const handleScroll = throttle(() => {
+    console.log('Scrolled');
+    // Imagine complex calculations or DOM updates here
+}, 300);
+
+window.addEventListener('scroll', handleScroll);
+
+// Self-Invoking Functions
+(function() {
+    const privateVar = 'This is private';
+    console.log('Self-invoking function runs immediately');
+    // Initialization code here
+})();
+
+// Private variables are not accessible from outside
+// console.log(privateVar); // ReferenceError: privateVar is not defined
+
+// htmlentities, sanitize
+function sanitize(strings, ...values) {
+    return strings.reduce((result, string, i) => {
+        let value = values[i - 1];
+        if (typeof value === 'string') {
+            value = value.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+        return result + value + string;
+    });
+}
+
+// in localhost
+function isLocalhost() { return ["localhost", "127.0.0.1", "::1"].includes(window.location.hostname); }
+
+// Avisa al usuario si sale sin gaurdar al navegar a otro URL
+function nota_bodega_beforeunload(ev) {
+    if($("#btn_save_entry").css("visibility") === "hidden")
+        return;
+    ev.preventDefault();
+    return "No ha gaurdado la nota, ¿continuar SIN Guardar?"
+}
+window.addEventListener('beforeunload', nota_bodega_beforeunload);

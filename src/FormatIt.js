@@ -351,6 +351,7 @@ class FormatIt {
 
     }
 
+
     is_ymd(value) {
         if(null === value || !isNaN(value) || typeof value !== "string" || value.length !== 10)
             return false;

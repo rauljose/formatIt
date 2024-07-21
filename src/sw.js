@@ -1,4 +1,6 @@
 // sw.js
+
+// vChanged
 self.addEventListener('install', (event) => {
     event.waitUntil(
         Promise.all([
