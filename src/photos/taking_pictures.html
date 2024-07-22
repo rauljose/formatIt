@@ -254,13 +254,67 @@ http://www.plantuml.com/plantuml/uml/SoWkIImgAStDuUBY0ZEvYiipIv8p53HAKejBx3MvaXE
 
 
 @startuml
+title Diso Backend
+caption App Interna de Diso
+legend
+App Interna de Diso
+end legend
 state Menu {
 }
+
+
 
 state Registra_Actividad {
         [*] --> Captura
         [*] --> Menu
     }
+
+state Promociones {
+        [*] --> Visitas
+        [*] --> Promos
+        [*] --> Lugares
+        [*] --> Registra_Actividad
+        [*] --> Menu
+}
+
+state Eventos {
+        [*] --> Cotiza
+        [*] --> Confirma
+        [*] --> Ejecuta
+        [*] --> Lugares
+        [*] --> Reportes
+        [*] --> Menu
+}
+
+state Deliveroo {
+   [*] --> Comprado
+   [*] --> Cuentas
+   [*] --> Surtir
+   [*] --> Facturacion
+   [*] --> Choferes
+   [*] --> Bodegas
+   [*] --> Menu
+}
+
+state Administra {
+   [*] --> Usuarios
+   [*] --> Permisos
+   [*] --> Productos
+   [*] --> Lugares
+   [*] --> Catalogos
+   [*] --> Menu
+}
+state Eventos {
+        [*] --> Cotiza
+        [*] --> Confirma
+        [*] --> Ejecuta
+        Ejecuta -> Chat
+        Ejecuta -> Sigue_Evento
+        Ejecuta -> Sigue_camión
+        [*] --> Lugares
+        [*] --> Reportes
+        [*] --> Menu
+}
 
     state Mis_Pendientes {
         [*] --> Lista_Pendientes
@@ -288,11 +342,12 @@ state Registra_Actividad {
         Menu --> Deliveroo
         Menu --> Promociones
         Menu --> Eventos
-        Menu --> Define
+        Menu --> Reportes
         Menu --> Administra
 
     state "Menú y/o Barra Navegación" as Menu
 @enduml
+
 
 
 
