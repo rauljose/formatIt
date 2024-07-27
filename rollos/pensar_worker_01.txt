@@ -1,0 +1,104 @@
+
+https://developer.chrome.com/docs/workbox
+
+
+// noinspection ES6ConvertVarToLetConst
+
+/**
+ * Cache or memoize data.
+ *
+ * @example
+ *      var vx_cacheador = new ItMemoize();
+ *      vx_cacheador.ttlSecondsDefault = 3600; // default is 0 never expire.
+ *      function calculateAndMemoize(a, b) {
+ *          let k = vx_cacheador.keyMake('calculateAndMemoize', arguments);
+ *          if(vx_cacheador.hasItem(k)) return vx_cacheador.getItem(k);
+ *          let calculate = a  + b;
+ *          return vx_cacheador.setItem(k, calculate, ttlSeconds); // ttl <= 0: forever, undefined use vx_cacheador.ttlSecondsDefault
+ *      }
+ * @returns {{delItem: delItem, hasItem: ((function(string): boolean)|*), getItem: (function(string): *), ttlSecondsDefault: number, keyMake: (function(string, *): string), setItem: (function(string, *, number=): *)}}
+ * @constructor
+ */
+function ItMemoize() {
+    if (!(this instanceof ItMemoize))
+        throw "Error usage: var memoizer = new ItMemoize();";
+    var _memoize = {};
+    var ttlSecondsDefault = 0;
+
+    /**
+     * Create a key by concatenating the functionName and key parameter values.
+     *
+     * @param {string} functionName - The name of the function.
+     * @param {any} key - The key parameter value.
+     * @returns {string} - The key created by concatenating the functionName and key parameter values.
+     */
+    function keyMake(functionName, key) {return functionName + "\t" + JSON.stringify(key);}
+
+    /**
+     * Set an item in the storage.
+     *
+     // * @param {string} key - The key to store the item under.
+     * @param {*} value - The value to be stored.
+     * @param {number} [ttlSeconds] - The time-to-live for the item in seconds. Defaults to 0 (no expiration).
+     * @returns {*} - The stored value.
+     */
+    function setItem(key, value, ttlSeconds) {
+        _memoize[key] = {
+            value:value,
+            ttl: typeof ttlSeconds === 'undefined' ? ttlSecondsDefault : parseInt(ttlSeconds) || ttlSecondsDefault,
+            timestamp: new Date()
+        };
+        return value;
+    }
+
+    /**
+     * Retrieves the value associated with a given key from the memoization cache.
+     *
+     * @param {string} key - The key of the item to retrieve from the cache.
+     * @returns {any} - The value associated with the given key, or undefined if the key does not exist in the cache.
+     */
+    function getItem(key) {return _memoize[key].value || undefined;}
+
+    /**
+     * Checks if an item with the given key is present in the memoize cache.
+     *
+     * @param {string} key - The key to check for.
+     * @returns {boolean} - Returns `true` if the item is present and hasn't expired, otherwise `false`.
+     */
+    function hasItem(key) {
+        if(!_memoize.hasOwnProperty(key))
+            return false;
+        var cachedItem = _memoize[key];
+        if(cachedItem.ttl <= 0)
+            return true;
+        return Date.now() - cachedItem.timestamp < cachedItem.ttl;
+    }
+
+    /**
+     * Deletes an item from the memoization cache.
+     *
+     * @param {string} key - The key of the item to delete.
+     */
+    function delItem(key) {delete _memoize[key];}
+
+    function delFunctionName(functionName) {
+        let functionNameTerminated = functionName + "\t";
+        for(let key in _memoize)
+            if(_memoize.hasOwnProperty(key) && key.startsWith(functionNameTerminated))
+                delete _memoize[key]
+    }
+
+    return {
+        keyMake:keyMake,
+        setItem:setItem,
+        hasItem:hasItem,
+        getItem:getItem,
+        delItem:delItem,
+        delFunctionName:delFunctionName,
+        ttlSecondsDefault:ttlSecondsDefault
+    };
+
+}
+
+Throttle ver el de undesrcore o dash o lo mando
+

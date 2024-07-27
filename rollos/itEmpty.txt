@@ -1,0 +1,24 @@
+/**
+ * is v empty? where empty is: null, false, zero, a blank string, Object with no keys, Array with 0 length,
+ * Set or Map with 0 size
+ * Note:  weakMap & weakSet can't be determined if they are empty.
+ *
+ * @param v
+ * @returns {boolean}
+ */
+function itEmpty(v) {
+    if(typeof v === 'undefined' || null === v)
+        return true;
+    if(Array.isArray(v))
+        return v.length === 0;
+    if(typeof v === 'object') {
+        if(v instanceof Set || v instanceof Map)
+            return v.size === 0;
+        return Object.keys(v).length === 0;
+    }
+    if('' == v)
+        return true;
+    if(typeof v === 'function')
+        return false;
+    return !isNaN(v) && parseFloat(v) === 0.00;
+}

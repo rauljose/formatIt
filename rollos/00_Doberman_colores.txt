@@ -1,0 +1,73 @@
+
+Black: #000000
+Rust: #9A6A4C (light rust) to #800000 (deep reddish brown)
+Red: #FF0000 (light fawn) to #C0392B (deep mahogany)
+
+.black {background-color:#000000}
+.rust {background-color:#9A6A4C}
+.rust_light {#background-color:9A6A4C}
+.sepia {background-color:#FF0000}
+.sepia_light_fawn {background-color:#FF0000}
+.sepia_deep_mahogany {background-color:#C0392B}
+
+
+<script src="../js2/app_iacase.js"></script>
+<script src="../js2/iaJqueryInit.js"></script>
+<script src="../js2/iautil.js"></script>
+
+https://analysis-tools.dev
+https://github.com/cheburakshu/Javascript-Explorer-Callgraph
+https://www.npmjs.com/package/js2mermaid
+
+
+npm install -g --dev-safe js2mermaid
+https://www.npmjs.com/package/jscallgraph-script
+perl https://github.com/koknat/callGraph
+
+https://developers.google.com/codelabs/pwa-training/pwa03--working-with-workbox
+https://firebase.google.com/docs/web/pwa
+	
+	
+	8 Awesomplete https://github.com/LeaVerou/awesomplete,
+		https://nico-amsterdam.github.io/awesomplete-util/index.html
+
+		
+	TinySelect
+	VanillaSelectBox https://github.com/PhilippeMarcMeyer/vanillaSelectBox
+	Combo Box Deluxe
+	
+	Utility Functions: general usage
+	Helper Functions: for the app or system
+	Core Business Logic; essential functionality of the application
+	Tips
+		 Minimize dependencies on external factors like global variables or system state
+		 gracefully handle unexpected situations 
+		 
+		 Hotspots, critical functions, 
+		 call graphs and function call frequency.
+		 
+		 
+SF HttpClient (mostly for the sole reason that guzzle
+truncates replies in their exceptions without any ability to configure that
+and cutting off all actually useful information about why request failed) 
+
+Search
+	https://github.com/teamtnt/tntsearch
+	
+	meilisearch Melisearxh or Algolia 
+	
+	DI Dependency Inversion Dependency Injection
+		 The main reason to use DI is to separate the details of instantiating a dependency from the details of its use.
+			 service a depends on service b, its incredibly useful for service a to not have to directly instantiate servicr b and whatever arbitrary dependencies service b has, or change over time
+		INVERSION
+			if A depends on B, every time B changes, A has to be changed as well. Now, if B changes frequently, this requires a lot of extra work. 
+			If you manage to „invert“ the dependency, so that B depends on A instread, B can change without anyone having to touch A.
+
+https://activitypub.ghost.org/
+		
+		
+ Business Process Model and Notation. You can now design your workflow using BPMN and run it with compatible workflow engines.
+ https://github.com/ProcessMaker/nayra
+ 
+
+ 

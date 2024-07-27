@@ -1,0 +1,140 @@
+
+	error_get_last()
+	libxml
+		libxml_get_last_error()	
+		libxml_get_errors() - Retrieve array of errors
+		libxml_clear_errors() - Clear libxml error buffer
+	json_last_error_msg() - , json_last_error()
+	preg_last_error_msg(), preg_last_error(), 
+	curl_error
+	openssl_error_string
+	imap_last_error(): Returns the last error message from the IMAP library.
+	ldap_error(): Returns the last error message from the LDAP library.
+	zip_get_error_msg
+	
+	
+
+	window.onerror = function (message, source, lineno, colno, error) {
+		const errorInfo = {
+			message: message,
+			source: source,
+			lineno: lineno,
+			colno: colno,
+			error: error
+		};
+		console.error(errorInfo); // Log the error details
+		// Send the error data to a server for logging (optional)
+	};
+
+	window.onerror = function(message, source, lineno, colno, error) {
+	  const errorData = {
+		type: 'global',
+		message,
+		source,
+		lineno,
+		colno,
+		stack: error ? error.stack : null
+	  };
+	  reportError(errorData); 
+	};
+
+	window.addEventListener('unhandledrejection', (event) => {
+	  const errorData = {
+		type: 'promiseRejection',
+		reason: event.reason
+	  };
+	  reportError(errorData);
+	});
+
+	async function reportError(errorData) {
+	  try {
+		const response = await fetch('/your-error-logging-endpoint', {
+		  method: 'POST',
+		  headers: { 'Content-Type': 'application/json' },
+		  body: JSON.stringify(errorData)
+		});
+		// Handle response (e.g., check for success)
+	  } catch (reportingError) {
+		console.error('Failed to report error:', reportingError); // Fallback logging
+	  }
+	}
+
+	Web Worker Error Handling:
+	JavaScript
+
+	// Inside your web worker script:
+	self.onerror = function(event) {
+	  const errorData = {
+		type: 'webWorker',
+		message: event.message,
+		filename: event.filename,
+		lineno: event.lineno,
+		colno: event.colno
+	  };
+	  self.postMessage({ type: 'error', payload: errorData }); // Send error to main thread
+	};
+
+	Main Thread (Receiving Errors from Worker):
+	JavaScript
+
+	yourWorker.onmessage = function(event) {
+	  if (event.data.type === 'error') {
+		reportError(event.data.payload); // Send worker error to server
+	  } else {
+		// Handle regular worker messages
+	  }
+	};
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//ERRORES A DIME
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var iacLastError=[],iacLastErrorXhr;
+function js_errores_a_dime(e){ // catcha errores sin try-catch, en su caso try{..} catch(e){js_errores_a_dime(e);}
+try {
+    if(e.message.search("status\":false") > -1)
+        return;
+    console.log("error detectado:",e);
+    var es ={message:e.message,filename:e.filename,lineno:e.lineno,colno:e.colno, err:e.error.toString()};
+    for(var i=0, iLen=iacLastError.length; i<iLen; i++) {
+        var ya=iacLastError[i];
+        if(ya.message === es.message && ya.filename === es.filename && ya.lineno === es.lineno && ya.clono === es.colno ) {
+            return;
+        }
+    }
+    if(es.message === 'TypeError: window.opener is null')
+        return;
+    var regex2 = /([?&_])(_js_cache|_nd|_|pi|e)=[^&\s:]+/gmi;
+    e.message = e.message.replace(regex2, "");
+
+    iacLastError[iacLastError.length] = es;
+    var data=new FormData(),sErr=e.error ?  e.error : e.message ? e.message : "error detected";
+    if(e.error && e.error.stack)
+        sErr += "<p>"+e.error.stack;
+    data.append('file', e.filename ? e.filename : window.location);
+    data.append('err',"<pre>" + sErr + ".</pre>\r\n<p><b>En</b>: " + location.protocol + "//" + location.host + location.pathname + " \r\n<br>");
+    data.append('line', e.lineno);
+    data.append('col', e.colno);
+    var xhr=new XMLHttpRequest();
+    xhr.open('POST', '../backoffice/ajax/logerr.php', true);
+    xhr.send(data);
+} catch(err){console.log("js_errores_a_dime tiene error:",err);}
+}
+window.addEventListener('error',function(e){js_errores_a_dime(e);});
+jQuery(function($){
+  $(document).on('ajaxError',function(event,xhr,settings){
+   try {
+        if(xhr.status == 0)
+            return;
+        if (xhr.status == 401) {
+            window.location.href = '../backoffice';
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            event.stopPropagation();
+            return;
+        }
+       iacLastErrorXhr=xhr;
+        if(settings.url.indexOf('logerr.php')<0)
+            js_errores_a_dime({error:status,filename:settings.url, message:'ajax call: '+xhr.statusText+'/'+xhr.status+': '+xhr.statusText+"<br>desde: "+window.location+"<pre>"+xhr.responseText+"</pre>", line:2,col:2});
+        } catch(err){console.log("js_errores_a_dime jquery default fail tiene error:",err);}
+    });
+});

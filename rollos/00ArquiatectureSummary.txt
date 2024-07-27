@@ -1,0 +1,33 @@
+LLM layman's explenation[https://www.newyorker.com/science/annals-of-artificial-intelligence/what-kind-of-mind-does-chatgpt-have]
+
+LIbrary vs Framework
+	When using a Library, our application code controls the flow of the program by invoking library methods whenever needed.
+
+	With a Framework, it instructs where to put our application code, and calls our code as required based on events or conditions.
+	* https://levelup.gitconnected.com/5-technical-terms-that-even-senior-programmers-confuse-with-and-its-embarrassing-88cc56b84403
+
+Use Case/
+ Single task: A use-case should have only one task — mostly one public function- to be concerned about.
+ Overloading decide how: getUserById, getUserByEmail,...
+ Naming present tense + noun/what (optional). The one public function could always be called invoke forcint good name for class 
+ Red flags
+ 1- More than one public function, except if overloading
+ 3- Having non-general business rules defined in the use-case, usually means a screen-specific logic.
+ 
+ --
+	1 Presentation: Responsible for showing information to the user and interpreting user commands;
+	2 Application: Defines the jobs the software is supposed to do by orchestrating the data flow from and to the domain models;
+		“services”/“usecases”/“interactors”, situated on top of models and the “ports” for the Data Layer (used for dependency inversion, usually Repository interfaces), they retrieve and store domain models by using either repositories or other Use Cases.
+	3 Domain: Represents concepts of the business, information about the current situation and business rules;
+		models = contain data and processes
+	4 Data: Responsible for persisting domain models.
+	
+	In 3-tier PresentationDomainDataLayering[https://martinfowler.com/bliki/PresentationDomainDataLayering.html] approach, in which the Application Layer lies inside the domain package.
+	
+https://bamania-ashish.medium.com/my-most-viewed-medium-stories-updated-monthly-201cc9b5c423
+https://calnewport.com/blog/
+	https://www.thedeeplife.com/listen/
+	
+	** https://www.newyorker.com/science/annals-of-artificial-intelligence/what-kind-of-mind-does-chatgpt-have
+	*** https://bamaniaashish.gumroad.com/l/visual_ai
+	https://www.npr.org/transcripts/539092670

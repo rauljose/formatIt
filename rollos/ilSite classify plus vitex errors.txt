@@ -1,0 +1,45 @@
+[19-Jun-2024 18:00:36 America/Mexico_City] PHP Warning:  session_regenerate_id(): Session ID cannot be regenerated when there is no active session in C:\wamp\www\vitex\inc\config.php on line 406
+[19-Jun-2024 18:15:08 America/Mexico_City] PHP Warning:  session_start(): open(t:/phptmp_vitex\sess_6e4c8004dd081214865ba4c255393d9b, O_RDWR) failed: Permission denied (13) in C:\wamp\www\vitex\inc\config.php on line 68
+[19-Jun-2024 18:15:08 America/Mexico_City] PHP Warning:  session_start(): open(t:/phptmp_vitex\sess_6e4c8004dd081214865ba4c255393d9b, O_RDWR) failed: Permission denied (13) in C:\wamp\www\vitex\inc\config.php on line 68
+[19-Jun-2024 18:15:08 America/Mexico_City] PHP Warning:  session_start(): Failed to read session data: files (path: t:/phptmp_vitex) in C:\wamp\www\vitex\inc\config.php on line 68
+[19-Jun-2024 18:15:08 America/Mexico_City] PHP Warning:  session_start(): Failed to read session data: files (path: t:/phptmp_vitex) in C:\wamp\www\vitex\inc\config.php on line 68
+[20-Jun-2024 10:01:14 America/Mexico_City] PHP Deprecated:  Creation of dynamic property appRelate::$has_workflow is deprecated in C:\wamp\www\v2019\app\appRelate.php on line 910
+[20-Jun-2024 10:11:32 America/Mexico_City] PHP Deprecated:  Creation of dynamic property appRelate::$has_workflow is deprecated in C:\wamp\www\v2019\app\appRelate.php on line 910
+
+[20-Jun-2024 14:04:28 America/Mexico_City] PHP Fatal error:  Cannot redeclare puede_autorizar_mercancia() (previously declared in C:\wamp\www\vitex\backoffice\ajax\movimientos_bodega_acciones.php:3556) in C:\wamp\www\vitex\backoffice\ajax\movimientos_bodega_acciones_v2.php on line 3382
+
+En icac_error buscar
+NOTA_BODEGA_INFO
+add_files
+SyntaxError: "undefined" is not valid JSON
+2: session_regenerate_id(): Session ID cannot be regenerated when there is no active session /vitex/inc/config.php	406
+
+ --
+ 	
+
+Error: cannot call methods on autocomplete prior to initialization; attempted to call method 'search'
+
+Error: cannot call methods on autocomplete prior to initialization; attempted to call method 'search' at
+ Function.error (https://t420sata.dyndns-free.com:2019/vitex/js2/jquery-3.7.1.min.js:2:2741) at 
+ HTMLInputElement. (https://t420sata.dyndns-free.com:2019/vitex/js2/jquery-ui-1.13.2.redmond/jquery-ui.min.js:6:2212) at 
+ Function.each (https://t420sata.dyndns-free.com:2019/vitex/js2/jquery-3.7.1.min.js:2:3129) at 
+ ce.fn.init.each (https://t420sata.dyndns-free.com:2019/vitex/js2/jquery-3.7.1.min.js:2:1594) at 
+ V.fn. [as autocomplete] (https://t420sata.dyndns-free.com:2019/vitex/js2/jquery-ui-1.13.2.redmond/jquery-ui.min.js:6:1951) 
+ at HTMLInputElement. (https://t420sata.dyndns-free.com:2019/vitex/js2/app_iacase.js:10600:29) at https://t420sata.dyndns-free.com:2019/vitex/js2/iautil.js:1505:18.
+
+ 
+
+En: https://t420sata.dyndns-free.com:2019/vitex/bodega/alta_movimientos_v2.php 
+
+/vitex/js2/jquery-3.7.1.min.js line: 2, col: 2735
+
+        // $('#origen_label').off('focus').on('focus', function () {
+        //     if(this.value !== '')
+        //        $(this).autocomplete("option", "autoFocus", true).autocomplete('search', this.value).select();
+        // });
+	
+
+app/app_ajuste.php
+inc/NotaBodega.php	
+inc/BodegaExistenciaDiaria.php
+testie/pepe.php
