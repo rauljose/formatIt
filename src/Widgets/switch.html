@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Switch</title>
+  <style data-soy="baseStyles">
+    BODY {
+      font-size: 1.25rem;
+      line-height: 1.5;
+
+    }
+    progress {accent-color: #080;/* del browser */}
+    BODY.itMargenes {
+      max-width: clamp(320px, 96%, 1000px);
+      margin: auto;
+    }
+    BUTTON {cursor:pointer}
+    H1, H2, H3, H4, H5, H6 {
+      text-wrap: balance;
+    }
+    LABEL {cursor:pointer}
+    .izq {text-align: center}
+    .lft {text-align: left}
+    .cen {text-align: left}
+    DIV.cen {margin:auto;width:100%;text-align: center}
+
+    IMG {
+      max-width: 100%;
+      border:none;
+    }
+    INPUT[type=checkbox] {cursor:pointer;accent-color: #080; /* del browser */}
+    INPUT[type=radio] {cursor:pointer;accent-color: #080; /* del browser */}
+    INPUT[type=range] {cursor:pointer;accent-color: #080; /* del browser */}
+    INPUT:checked + label {color: blue;}
+
+    .itFlexRow {display:flex;flex-direction:row;flex-wrap:wrap;gap:0;justify-content: flex-start}
+    .itItemBorderd {padding:0.5em;border:1px #00F solid}
+
+    @media print  {
+      .noprint {display:none}
+      .noPrint {display:none}
+    }
+    @media(prefers-reduced-motion) {
+      *, *::before, *::after {
+        animation-duration: 0s !important;
+        /* additional recommendation */
+        transition: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+  <style data-soy="itSwitchStyle">
+      .itSwitch {
+        cursor:pointer;
+        appearance: none;
+        position: relative;
+        width: 3em;
+        aspect-ratio: 2.25;
+        background: red;
+        border-radius: 100vmax;
+        font-size: 1em;
+        background: linear-gradient(90deg, #12dbd6, #0ae1c4, #ed992e, #e76439) 0 0 / 7.5em 100%;
+        background: linear-gradient(90deg, #e76439, #ed992e, #10b1a4, #00A0B0) 0 0 / 7.5em 100%;
+        transition: background-position 0.5s linear;
+        border: 1px solid #0000;
+        background-clip: content-box;
+
+        &::before, &::after {
+          content: "";
+          position: absolute;
+          width: 0.1em;
+          height: 0.8em;
+          background: #fff;
+          top: 50%;
+          left: 25%;
+          transform: translate(-50%, -50%) rotate(45deg);
+          border-radius: 1em;
+          transition: all 0.4s 0.25s;
+          border: 1px solid #0000;
+          box-sizing: border-box;
+        }
+
+        &::after {
+          transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        &:checked {
+          background-position: -4.5em 0;
+
+          &::before {
+            left: 75%;
+            transform: translate(-50%, -50%) rotate(225deg);
+          }
+
+          &::after {
+            height: 0.4em;
+            top: 60%;
+            left: 63%;
+            transform: translate(-50%, -50%) rotate(-225deg);
+          }
+        }
+
+        &[disabled] {
+          opacity: 0.25;
+        }
+      }
+      INPUT.itSwitch:checked + label {color: #00A0B0;}
+      INPUT.itSwitch:not(:checked) + label {color:  #e76439;}
+
+      @media print {
+        .colorful {
+          &, &::before, &::after {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+          }
+        }
+      }
+
+      @media (prefers-reduced-motion) {
+        .colorful {
+          &, &::before, &::after {
+            transition: none !important;
+            animation: none !important;
+          }
+        }
+      }
+    </style>
+
+</head>
+<body>
+<h1>itSwitch</h1>
+<div class="itFlexRow">
+  <div class="itItemBorderd" style="white-space:nowrap"><input type="checkbox" role="switch" class="itSwitch" id="switchId" name="switchId"><label for="switchId" style="vertical-align: top"> Revisado</label></div>
+  <div class="itItemBorderd" style="white-space:nowrap"><input type="checkbox" role="switch" class="itSwitch" id="valid" name="switchId"><label for="valid" style="vertical-align: top"> Aplicado</label></div>
+  <div class="itItemBorderd" style="line-height:1em "><input type="checkbox" role="switch" class="itSwitch" id="activo" name="activo"><label for="switchId" style="vertical-align: top"><br>Autorizado</label></div>
+  <div class="itItemBorderd" style="white-space:nowrap"><input type="checkbox" id="otro" name="activo"><label for="otro" style="vertical-align: top"> Checkbox</label></div>
+  <div class="itItemBorderd" style="max-width: 30ch;">Este rollo intenta ser de máximo 30 caracteres</div>
+</div>
+</body>
+</html>
