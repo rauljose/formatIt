@@ -1,4 +1,8 @@
 <?php
+/**
+ * Perform operations on behalf firebase user with his/her token
+ * @see token.js
+ */
 use Kreait\Firebase\Factory;
 
 $factory = (new Factory)->withServiceAccount('/path/to/serviceAccountKey.json');

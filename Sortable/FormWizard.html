@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>A Form Wizard</title>
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --background-color: #f8f9fa;
+            --text-color: #333;
+        }
+
+        #form-wizard {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--background-color);
+        }
+
+        /* Navigation buttons for each step */
+        nav ul {
+            display: flex;
+            justify-content: space-between;
+            padding: 0;
+            margin-bottom: 20px;
+        }
+
+        nav li {
+            list-style: none;
+        }
+
+        nav button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        nav button:hover {
+            background-color: var(--primary-color);
+        }
+
+        nav button.active {
+            background-color: var(--primary-color);
+        }
+
+        /* Step container */
+        .step {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            display:none;
+        }
+
+        /* Next/Prev buttons */
+        .step button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            margin-top: 20px;
+        }
+
+        .step button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .step button:active {
+            transform: translateY(0);
+        }
+
+        /* Back button specific style */
+        .step button[onclick*="Back"] {
+            background-color: var(--secondary-color);
+            margin-right: 10px;
+        }
+
+        .step button[onclick*="Back"]:hover {
+            background-color: #5a6268;
+        }
+
+        /* Submit button specific style */
+        #review button[onclick="submitForm()"] {
+            background-color: var(--success-color);
+        }
+
+        #review button[onclick="submitForm()"]:hover {
+            background-color: #218838;
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            nav ul {
+                flex-wrap: wrap;
+            }
+
+            nav li {
+                flex: 0 0 50%;
+                margin-bottom: 10px;
+            }
+
+            nav button {
+                width: 100%;
+            }
+
+            .step button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>Form Wizard</h1>
+<div id="form-wizard">
+    <nav>
+        <ul>
+            <li><button onclick="showStep(1)">Evento</button></li>
+            <li><button onclick="showStep(2)">Step 2</button></li>
+            <li><button onclick="showStep(3)">Step 3</button></li>
+            <li><button onclick="showStep(4)">Review</button></li>
+        </ul>
+    </nav>
+
+    <div id="step1" class="step">
+        <fieldset><legend>El uno</legend></fieldset>
+        <button onclick="showStep(2)">Next</button>
+    </div>
+
+    <div id="step2" class="step">
+        <fieldset><legend>El 2</legend></fieldset>
+        <button onclick="showStep(1)">Back</button>
+        <button onclick="showStep(3)">Next</button>
+    </div>
+
+    <div id="step3" class="step">
+        <fieldset><legend>El 3</legend></fieldset>
+        <button onclick="showStep(2)">Back</button>
+        <button onclick="showStep(4)">Review</button>
+    </div>
+
+    <div id="review" class="step">
+        <!-- Collapsible sections for reviewing each step -->
+        <button onclick="submitForm()">Submit</button>
+    </div>
+</div>
+
+<script>
+    function showStep(stepNumber) {
+        // Hide all steps
+        document.querySelectorAll('.step').forEach(step => step.style.display = 'none');
+        // Show the selected step
+        document.getElementById(`step${stepNumber}`).style.display = 'block';
+        // Update progress indication
+        updateProgress(stepNumber);
+    }
+
+    function updateProgress(stepNumber) {
+        // Update the visual progress indicator
+        document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+        document.querySelector(`nav button[onclick="showStep(${stepNumber})"]`).classList.add('active');
+    }
+
+    function submitForm() {
+        // Handle form submission
+    }
+</script>
+</body>
+</html>
