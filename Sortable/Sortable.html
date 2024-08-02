@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>Sortable/Drag & Drop</title>
+</head>
+<body>
+<h1>Sortable/Drag & Drop</h1>
+
+<fieldset id="selected" class="bottle-container"><legend>Seleccionados</legend>
+</fieldset>
+<fieldset id="available" class="bottle-container"><legend>Tequila (0 a 2)</legend>
+    <div class="bottle" data-id="1"><img src="img/1800_anejo_cristalino.jpg" alt="Tequila"></div>
+    <div class="bottle" data-id="2"><img src="img/1800_Reposado.jpg" alt="Tequila"></div>
+    <div class="bottle" data-id="3"><img src="img/Don_Julio_Reposado.jpg" alt="Tequila"></div>
+    <div class="bottle" data-id="3"><img src="img/Herradura_Reposado.jpg" alt="Tequila"></div>
+</fieldset>
+
+
+
+<style>
+    .bottle-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px;
+        min-height: 70px;
+        border: 2px dashed #ccc;
+        margin-bottom: 20px;
+    }
+
+    .bottle {
+        width: auto;
+        height: 120px;
+        cursor: move;
+    }
+
+    .bottle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 5px;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const availableContainer = document.getElementById('available');
+        const selectedContainer = document.getElementById('selected');
+
+        new Sortable(availableContainer, {
+            group: 'shared',
+            animation: 150,
+            sort: false
+        });
+
+        new Sortable(selectedContainer, {
+            group: 'shared',
+            animation: 150,
+            sort: true,
+            onAdd: function(evt) {
+                if (selectedContainer.children.length > 3) {
+                    availableContainer.appendChild(evt.item);
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
