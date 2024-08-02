@@ -1,15 +1,58 @@
 /**
+ * 2-4 options: Almost always better with radio buttons
+ * 5-7 options: Often still better with radio buttons, especially if the options are short
+ * 8+ options: Consider using a select tag, especially if screen space is limited
+ *
+ * The exact threshold can vary based on factors like:
+ *
+ * Option length: Shorter options work better as radio buttons
+ * Screen size: Smaller screens may benefit from select tags sooner
+ * Importance of comparison: If users need to easily compare options, radio buttons may be preferred even for more options
+ * Frequency of use: More frequently used forms might benefit from radio buttons for quick selection
+ *
+ * In a PWA, you might also consider using a responsive design approach:
+ *
+ * Use radio buttons on larger screens
+ * Switch to a select tag on smaller screens if you have more than 4-5 options
+ *
+ * For binary options like Yes/No or On/Off, a toggle switch (often called just a "switch") is generally considered a better user interface choice than radio buttons
+ *   except: When you want to force an explicit choice (a switch can imply a default state)
+ *
+ *   // This marker is 20 pixels wide by 32 pixels high.
+ */
+/**
  * Utilities to write html forms input elements
  *
  * @param {object} options
  * @returns {ItHtmlForm|{toLabel: function(string): string, toId: function(string): string, getCheckBoxesChecked: function(string): Array, radioButtons: function(string, Array<{string: string}>, (string|Array[string|number])): string, oneCheckBox: function(string, string, string, string, string): string, setRadioValue: function(string, string): void, getCheckBoxesAll: function(string): {}, checkAllCheckboxes: function(string): void, selectOptions: function(Array<{string: string}>, (string|Array[string|number])): string, attributes2string: function(*): *, chooseMany: function(string, string, Array<{string: string}>, (string|Array[string|number]), int): string, version: string, checkboxes: function(string, Array<{string: string}>, (string|Array[string|number])): string, toAttribute: function(string): string, getRadioValue: function(string): (string|undefined), checkOnlyCheckboxesWithValues: function(string, Array<string>): void, checkCheckboxesWithValues: function(string, Array<string>): void, uncheckAllCheckboxes: function(string): void, chooseOne: function(string, string, Array<{string: string}>, (string|Array[string|number]), int): string}}
  * @constructor
+ *
+ * 1. `chooseOne`: Generates HTML code for a select dropdown or radio buttons based on the number of options.
+ * 2. `chooseMany`: Generates HTML code for a select dropdown or checkboxes based on the number of options.
+ * 3. `radioButtons`: Generates HTML code for radio buttons.
+ * 4. `getRadioValue`: Retrieves the value of the selected radio button.
+ * 5. `setRadioValue`: Sets the value of a radio button.
+ * 6. `oneCheckBox`: Generates HTML code for a single checkbox input.
+ * 7. `checkboxes`: Generates HTML code for checkboxes.
+ * 8. `getCheckBoxesChecked`: Retrieves the values of the checked checkboxes.
+ * 9. `getCheckBoxesAll`: Retrieves the values and checked status of all checkboxes.
+ * 10. `checkAllCheckboxes`: Checks all checkboxes.
+ * 11. `uncheckAllCheckboxes`: Unchecks all checkboxes.
+ * 12. `checkCheckboxesWithValues`: Checks specific checkboxes based on their values.
+ * 13. `checkOnlyCheckboxesWithValues`: Unchecks all checkboxes and then checks specific checkboxes based on their values.
+ * 14. `selectOptions`: Generates HTML code for select dropdown options.
+ * 15. `attributes2string`: Converts an attributes object to a string representation.
+ * 16. `toLabel`: Converts a camel, pascal, or snake case string to title case.
+ * 17. `toId`: Converts a string to a valid HTML element id.
+ * 18. `toAttribute`: Quotes and protects an attribute string.
+ * 19. `_extend`: Emulates jQuery's extend function for merging objects.
+ *
  */
 function ItHtmlForm(options) {
     if(!(this instanceof ItHtmlForm))
         return new ItHtmlForm(options);
 
-    const version = '2024-07-31';
+    const version = '2024-08-01';
     const defaults = {
         css: {
             radioFieldset:"ItflexRow ItFieldset",
