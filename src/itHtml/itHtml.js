@@ -84,7 +84,7 @@ const itHtml = {
             document.body.appendChild(overlay);
         }
         if(timeout && typeof timeout === 'number')
-            setTimeout(() => this.unblockUI(overlayElementOrId), timeout);
+            setTimeout(function() {this.unblockUI(overlayElementOrId)}, timeout);
     },
 
     /**
